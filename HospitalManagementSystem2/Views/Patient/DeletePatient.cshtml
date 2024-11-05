@@ -1,0 +1,11 @@
+﻿@model Patient
+@* @{
+    Layout = "~/Views/Shared/_Hospital1Layout.cshtml";
+} *@
+<form method="post" action="/Patient/SaveDeletePatient/@Model.Id">
+<div class="form form-control">
+    <input type="submit" value="Delete"/>
+
+</div>    
+
+</form>

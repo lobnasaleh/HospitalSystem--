@@ -1,0 +1,16 @@
+﻿@model Department
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h2>Select Department</h2>
+<form method="post" asp-action="ChooseDoctor" asp-controller="Appointment">
+    <label asp-for="Id"> Department </label>
+    <select asp-for="Id"
+            class="form form-control"
+            asp-items="ViewBag.Departments">
+        <option value="0"> Select Depmartent </option>
+        </select>
+    <span asp-validation-for="Id" class="text-danger"></span>
+    <input type="submit" value="Next" class="btn btn-success" />
+</form>

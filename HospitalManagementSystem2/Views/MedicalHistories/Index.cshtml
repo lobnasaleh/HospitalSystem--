@@ -1,0 +1,109 @@
+﻿@model IEnumerable<HospitalManagementSystem2.Models.MedicalHistory>
+@{
+    ViewData["Title"] = "Medical Histories";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<p>
+    <a asp-action="CreateOrUpdate">Create New Medical History</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().PatientId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().StaffId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().Diagnosis)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().TreatmentPlan)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().Prescription)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().VisitedDate)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PatientId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StaffId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Diagnosis)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TreatmentPlan)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Prescription)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.VisitedDate)
+                </td>
+                <td>
+                    <a asp-action="CreateOrUpdate" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@if (ViewData["Title"].ToString() == "PatientHistory")
+{
+    <h2>Patient Medical History</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.FirstOrDefault().Diagnosis)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.FirstOrDefault().TreatmentPlan)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.FirstOrDefault().Prescription)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.FirstOrDefault().VisitedDate)
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Diagnosis)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TreatmentPlan)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Prescription)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.VisitedDate)
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<a asp-action="Index">Back to List</a>

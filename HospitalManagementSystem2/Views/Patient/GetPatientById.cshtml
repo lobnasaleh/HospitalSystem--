@@ -1,0 +1,35 @@
+﻿@model Patient
+@* @{
+    Layout = "~/Views/Shared/_Hospital1Layout.cshtml";
+} *@
+@{
+    ViewData["Title"] = "Get Patient by Id";
+}
+<table class="table table-bordered table-hover">
+    <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Address</th>
+        <th>Emergency Contact</th>
+        <th>Insurance Number</th>
+        <th>Insurance Provider</th>
+        <th>Phone Number</th>
+        <th>Date of Birth</th>
+        <th>User id</th>
+
+
+    </tr>
+        <tr>
+             <td>@Model.User.Name</td>
+                <td>@Model.User.Email</td>
+                <td>@Model.Address</td>
+                <td>@Model.EmergencyContact</td>
+                <td>@Model.InsuranceNumber </td>
+                 <td>@Model.InsuranceProvider</td>
+            <td>@Model.User.PhoneNumber </td>
+               <td>@Model.Dob</td>
+               <td>@Model.UserId</td>
+
+        </tr>
+    
+</table>

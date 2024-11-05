@@ -1,0 +1,49 @@
+﻿@model IEnumerable<HospitalManagementSystem2.Models.Staff>
+
+@* @{
+    ViewData["Title"] = "Index";
+    Layout = "_Hospital1Layout";
+} *@
+
+<h1>Staff List</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Create New</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.First().User.Name)</th>
+            <th>@Html.DisplayNameFor(model => model.First().Position)</th>
+            <th>@Html.DisplayNameFor(model => model.First().Qualification)</th>
+            <th>@Html.DisplayNameFor(model => model.First().Department.Name)</th> 
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (!Model.Any())
+        {
+            <tr>
+                <td colspan="5" class="text-center">No staff members available.</td>
+            </tr>
+        }
+        else
+        {
+            foreach (var item in Model)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(modelItem => item.User.Name)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Position)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Qualification)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Department.Name)</td> 
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                        <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                        <a asp-action="Delete" asp-route-id="@item.Id" onclick="return confirm('Are you sure you want to delete this item?');">Delete</a>
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>

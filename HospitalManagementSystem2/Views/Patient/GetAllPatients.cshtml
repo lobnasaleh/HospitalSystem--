@@ -1,0 +1,58 @@
+﻿@model List<Patient>
+
+@* @{
+    Layout = "~/Views/Shared/_Hospital1Layout.cshtml";
+} *@
+@{
+    ViewData["Title"] = "Get All Patients";
+    
+}
+
+<h1>GetAllPatients</h1>
+<table class="table table-bordered table-hover">
+    <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Address</th>
+        <th>Emergency Contact</th>
+        <th>Insurance Number</th>
+        <th>Insurance Provider</th>
+        <th>Phone Number</th>
+        <th>Date of Birth</th>
+        <td>UserId</td>
+
+
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.User.Name</td>
+            <td>@item.User.Email</td>
+            <td>@item.Address</td>
+            <td>@item.EmergencyContact</td>
+            <td>@item.InsuranceNumber </td>
+            <td>@item.InsuranceProvider</td>
+            <td>@item.User.PhoneNumber </td>
+            <td>@item.Dob</td>
+            <td>@item.UserId</td>
+            <td><a href="/Patient/EditU/@item.User.Id" class="btn btn-primary">Edit</a></td>
+            <td><a href="/Patient/DeletePatient/@item.Id" class="btn btn-primary">Delete</a></td>
+
+        </tr>
+    }
+    <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td><a href="/Patient/AddU" class="btn btn-primary">Add</a></td>
+    </tr>
+</table>
+

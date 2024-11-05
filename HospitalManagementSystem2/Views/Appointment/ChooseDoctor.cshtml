@@ -1,0 +1,48 @@
+﻿@model IEnumerable<HospitalManagementSystem2.Models.Staff>
+
+@{
+    ViewData["Title"] = "ChooseDoctor";
+}
+
+<h1>Choose a Doctor</h1>
+
+<table class="table table-hover table-bordered">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.User.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Qualification)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Department.Name)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                    @Html.DisplayFor(modelItem => item.Id)
+            </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.User.Name)
+                </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Qualification)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Department.Name)
+            </td>
+            <td>
+                    <a asp-action="GetAvailableTimeSlots" asp-controller="Appointment" asp-route-Id="@item.Id" asp-route-DepartmentId="@item.DepartmentId" class="btn btn-primary mx-2">Show Available Time</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

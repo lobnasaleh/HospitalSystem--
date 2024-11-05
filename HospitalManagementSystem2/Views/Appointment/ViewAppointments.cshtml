@@ -1,0 +1,84 @@
+﻿@model List<Appointment>
+<h1 class="text-center" style="color:rgb(24 187 155)">All Appointments</h1>
+
+<table class="table table-bordered table-hover table-info ">
+
+    <thead>
+    <th>
+            @if (Model != null && Model.Count > 0)
+            {
+                if (Model[0].Staff?.User != null)
+                {
+                    @:Doctor Name
+                }
+                else if (Model[0].Patient?.User != null)
+                {
+                    @:Patient Name
+                }
+                else
+                {
+                <span>N/A</span> <!-- Fallback if neither user is available -->
+                }
+            }
+            else
+            {
+            <span>Name</span> <!-- Fallback if the Model is empty -->
+            }
+    </th>
+        <th>Department Name</th>
+        <th>Appointment Date </th>
+         <th>Appointment Time</th>
+        <th>Appointment Status</th>
+    <th></th>
+
+
+    </thead>
+    <tbody>
+        @foreach(var item in Model)
+        {
+            <tr>
+
+                <td>
+                    @if (item.Staff?.User != null)
+                    {
+                        @item.Staff.User.Name
+                    }
+                    else if (item.Patient?.User != null)
+                    {
+                        @item.Patient.User.Name
+                    }
+                    else
+                    {
+                        <span>N/A</span> <!-- Fallback if neither user is available -->
+                    }
+                </td>
+
+
+                <td>@item.Department.Name</td>
+                <td>@item.AppointmentDateTime.ToString("d")</td>
+                <td>@item.AppointmentDateTime.ToString("t")</td>
+
+                <td>@item.Status</td>
+                <td>
+                    @if (item.Staff?.User != null)//viewer is a patient
+                    {
+
+                        <a class="btn btn-primary" asp-action="GetAppointmentById" asp-controller="Appointment" asp-route-id="@item.Id">View Appointment</a>
+
+                    }
+                    else
+                    {
+                      
+                    }
+                </td>
+            
+            </tr>
+         
+
+        }
+    </tbody>
+
+
+
+
+</table>

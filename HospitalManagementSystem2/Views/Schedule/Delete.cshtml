@@ -1,0 +1,21 @@
+﻿@model HospitalManagementSystem2.Models.Schedule
+
+<h1>Delete Schedule</h1>
+
+<h4>Are you sure you want to delete this schedule?</h4>
+<div>
+    <h4>@Model.Date.ToShortDateString() - @Model.AvailableFrom to @Model.AvailableTo</h4>
+</div>
+
+<form asp-controller="Schedule" asp-action="DeleteConfirmed" asp-route-id="@Model.Id" method="post">
+    <input type="hidden" asp-for="Id" />
+    <div class="form-group">
+        <input type="submit" value="Delete" class="btn btn-danger" />
+    </div>
+</form>
+
+
+
+
+<a asp-action="Index">Back to List</a>
+

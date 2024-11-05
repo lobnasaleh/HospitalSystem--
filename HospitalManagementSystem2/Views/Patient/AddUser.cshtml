@@ -1,0 +1,35 @@
+﻿@model User
+@* @{
+    Layout = "~/Views/Shared/_Hospital1Layout.cshtml";
+} *@
+@{
+    ViewData["Title"] = "Add New User";
+    SelectList RolesOptions = new SelectList(ViewBag.RolesList, "Id", "Name");
+}
+
+
+<form method="post" action="/Patient/AddUser">
+    <h3>Add New User</h3>
+    <div class="">
+         <div class="form-group">
+        <input type="text" name="Name" id="Name"value="@Model?.Name" class="form-control" placeholder="Name">
+        </div> 
+         <div class="form-group">
+        <input type="email" name="Email" id="Email" value="@Model?.Email"class="form-control" placeholder="E-mail">
+        </div> 
+          <div class="form-group">
+        <input type="password" name="Password" id="Password"value="@Model?.Password" class="form-control" placeholder="Password">
+          </div>
+        <div class="form-group">
+            <input type="text" name="PhoneNumber" id="PhoneNumber" value="@Model?.PhoneNumber" class="form-control" placeholder="phoneNumber">
+        </div>
+        <div class="form-group">
+            <select asp-for="RoleId" asp-items="RolesOptions" class="form-control">
+            </select>
+        </div>
+    <div class="">
+        <div class="form-group">
+            <input type="submit" value="Add" class="btn btn-primary">
+        </div>
+    </div>
+</form>

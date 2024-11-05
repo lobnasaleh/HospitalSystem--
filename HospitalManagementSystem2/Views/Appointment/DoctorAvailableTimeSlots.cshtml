@@ -1,0 +1,45 @@
+﻿@model List<Schedule>
+
+<h1 class="text-center" style="color:rgb(24 187 155)">Available Appointments </h1>
+
+<table class="table table-bordered table-hover table-info ">
+
+    <thead>
+
+    <th> Date </th>
+    <th> Start Time</th>
+    <th> End Time</th>
+    <th></th>
+
+
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Date.ToString("d")</td>
+                <td>
+                   @item.AvailableFrom
+                </td>
+                <td>@item.AvailableTo</td>
+
+                @{
+                    var datePart = item.Date.Date; // Extract only date part from DateTime
+                    var availableFrom = item.AvailableFrom;   // TimeOnly type
+                    var mergedDateTime = new DateTime(datePart.Year, datePart.Month, datePart.Day, availableFrom.Hour, availableFrom.Minute, availableFrom.Second); // Combine date and time
+                }
+              <td>
+                    <a class="btn btn-primary" asp-action="BookAppointment" asp-controller="Appointment" asp-route-StaffId="@ViewBag.StaffId" asp-route-DepartmentId="@ViewBag.DepartmentId" asp-route-PatientId="1" asp-route-AppointmentDateTime="@mergedDateTime.ToString("yyyy-MM-ddTHH:mm:ss")">Book Appointment</a>
+                </td>
+                 
+            </tr>
+
+
+        }
+    </tbody>
+
+
+
+
+</table>
+

@@ -1,0 +1,21 @@
+﻿@model Appointment
+
+<div class="container mt-5">
+    <div class="card text-center">
+        <div class="card-header">
+            Appointment Details
+        </div>
+        <div class="card-body">
+            <p class="card-title"><strong>Doctor Name:</strong> @Model.Staff.User.Name</p>
+            <p class="card-text"><strong>Date:</strong>@Model.AppointmentDateTime.ToString("d")</p>
+            <p class="card-text"><strong>Time:</strong> @Model.AppointmentDateTime.ToString("t")</p>
+            <p class="card-text"><strong>Status:</strong> @Model.Status</p>
+            <p class="card-text"><strong>Department :</strong> @Model.Department.Name</p>
+            <div class="d-flex justify-content-center">
+                <a asp-action="UpdateAppointment" asp-controller="Appointment" asp-route-id="@Model.Id" asp-route-DepartmentId="@Model.DepartmentId" class="btn btn-primary mx-2">Update Appointment</a>
+                <a asp-action="Delete" asp-controller="Appointment" asp-route-id="@Model.Id"  class="btn btn-danger">Delete Appointment</a>
+
+            </div>
+        </div>
+    </div>
+</div>

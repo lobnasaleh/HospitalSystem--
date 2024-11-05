@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Dashboard</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        .button {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            text-align: center;
+            color: white;
+            text-decoration: none; /* Remove underline for links */
+        }
+
+        .view-appointments {
+            background-color: #4CAF50;
+        }
+        /* Green */
+        .manage-appointments {
+            background-color: #2196F3;
+        }
+        /* Blue */
+        .view-medical-history {
+            background-color: #f44336;
+        }
+        /* Red */
+        .view-doctor-details {
+            background-color: #FFC107;
+        }
+        /* Yellow */
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Patient Dashboard</h1>
+        <a class="button view-doctor-details" href="/Appointment/GetAllDepartments">Book Appointment</a>
+
+        <a class="button view-appointments" href="/Appointment/GetAppointmentsByPatient?PatientId=1">View My Appointments</a>
+        <a class="button view-medical-history" href="/MedicalHistories/Index">View Medical History</a>
+        </div>
+
+</body>
+</html>

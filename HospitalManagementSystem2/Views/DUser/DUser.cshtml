@@ -1,0 +1,75 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor Management Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        .button {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .manage-patients {
+            background-color: #4CAF50; /* Green */
+            color: white;
+        }
+
+        .manage-staff {
+            background-color: #2196F3; /* Blue */
+            color: white;
+        }
+
+        .manage-schedule {
+            background-color: #f44336; /* Red */
+            color: white;
+        }
+
+        .manage-staff-schedule {
+            background-color: #FFC107; /* Yellow */
+            color: white;
+        }
+
+        .button:hover {
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Doctor Management Dashboard</h1>
+        <a class="button manage-staff-schedule" href="/Appointment/GetAppointmentsByDoctor?StaffId=1">View Appointments</a>
+        <a class="button manage-schedule" href="/MedicalHistories/Index">Update Medical Records</a>
+    </div>
+
+</body>
+</html>

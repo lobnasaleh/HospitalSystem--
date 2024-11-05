@@ -1,0 +1,146 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Use Razor syntax for page titles -->
+    <title>@ViewData["Title"] - Hospital System Application</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Poppins:100,200,300,400,500,600,700,800,900" rel="stylesheet">
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="@Url.Content("~/css/open-iconic-bootstrap.min.css")">
+    <link rel="stylesheet" href="@Url.Content("~/css/animate.css")">
+    <link rel="stylesheet" href="@Url.Content("~/css/owl.carousel.min.css")">
+    <link rel="stylesheet" href="@Url.Content("~/css/owl.theme.default.min.css")">
+    <link rel="stylesheet" href="@Url.Content("~/css/magnific-popup.css")">
+    <link rel="stylesheet" href="@Url.Content("~/css/aos.css")">
+    <link rel="stylesheet" href="@Url.Content("~/css/ionicons.min.css")">
+    <link rel="stylesheet" href="@Url.Content("~/css/flaticon.css")">
+    <link rel="stylesheet" href="@Url.Content("~/css/icomoon.css")">
+    <link rel="stylesheet" href="@Url.Content("~/css/style.css")">
+</head>
+<body data-spy="scroll" data-target=".site-navbar-target" data-offset="300">
+    <header>
+        <!-- Navbar -->
+        <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light site-navbar-target" id="ftco-navbar">
+            <div class="container">
+                <a class="navbar-brand" href="/">MediCare</a>
+                <button class="navbar-toggler js-fh5co-nav-toggle fh5co-nav-toggle" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="oi oi-menu"></span> Menu
+                </button>
+
+                <div class="collapse navbar-collapse" id="ftco-nav">
+                    <ul class="navbar-nav nav ml-auto">
+                        <li class="nav-item"><a href="/#home-section" class="nav-link"><span>Home</span></a></li>
+                        <li class="nav-item"><a href="/#about-section" class="nav-link"><span>About</span></a></li>
+                        <li class="nav-item"><a href="/#department-section" class="nav-link"><span>Departments</span></a></li>
+                        <li class="nav-item"><a href="/#doctor-section" class="nav-link"><span>Staff</span></a></li>
+                        <li class="nav-item"><a href="/appointment" class="nav-link">Appointments</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <!-- Hero Section -->
+    <section class="hero-wrap hero-wrap-2" style="background-image: url('@Url.Content("~/images/bg_1.jpg")');" data-stellar-background-ratio="0.5">
+        <div class="overlay"></div>
+        <div class="container">
+            <div class="row no-gutters slider-text align-items-end justify-content-start">
+                <div class="col-md-9 ftco-animate pb-4">
+                    <h1 class="mb-3 bread">Staff</h1>
+                    <p class="breadcrumbs"><span class="mr-2"><a href="/">Home <i class="ion-ios-arrow-forward"></i></a></span> <span>Staff <i class="ion-ios-arrow-forward"></i></span></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <section class="container mt-4">
+        @RenderBody()
+    </section>
+
+    <!-- Footer --> 
+    <footer class="ftco-footer ftco-section img" style="background-image: url('@Url.Content("~/images/footer_bg.jpg")');">
+        <div class="overlay"></div>
+        <div class="container-fluid px-md-5">
+            <div class="row mb-5">
+                <div class="col-md">
+                    <div class="ftco-footer-widget mb-4 ml-md-4">
+                        <h2 class="ftco-heading-2">Departments</h2>
+                        <ul class="list-unstyled">
+                            <li><a href="#"><span class="icon-long-arrow-right mr-2"></span>Neurology</a></li>
+                            <li><a href="#"><span class="icon-long-arrow-right mr-2"></span>Opthalmology</a></li>
+                            <li><a href="#"><span class="icon-long-arrow-right mr-2"></span>Nuclear Magnetic</a></li>
+                            <li><a href="#"><span class="icon-long-arrow-right mr-2"></span>Surgical</a></li>
+                            <li><a href="#"><span class="icon-long-arrow-right mr-2"></span>Cardiology</a></li>
+                            <li><a href="#"><span class="icon-long-arrow-right mr-2"></span>Dental</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md">
+                    <div class="ftco-footer-widget mb-4 ml-md-4">
+                        <h2 class="ftco-heading-2">Links</h2>
+                        <ul class="list-unstyled">
+                            <li><a href="#"><span class="icon-long-arrow-right mr-2"></span>Home</a></li>
+                            <li><a href="#"><span class="icon-long-arrow-right mr-2"></span>About</a></li>
+                            <li><a href="#"><span class="icon-long-arrow-right mr-2"></span>Departments</a></li>
+                            <li><a href="#"><span class="icon-long-arrow-right mr-2"></span>Staff</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md">
+                    <div class="ftco-footer-widget mb-4">
+                        <h2 class="ftco-heading-2">Services</h2>
+                        <ul class="list-unstyled">
+                            <li><a href="#"><span class="icon-long-arrow-right mr-2"></span>Emergency Services</a></li>
+                            <li><a href="#"><span class="icon-long-arrow-right mr-2"></span>Qualified Doctors</a></li>
+                            <li><a href="#"><span class="icon-long-arrow-right mr-2"></span>Outdoors Checkup</a></li>
+                            <li><a href="#"><span class="icon-long-arrow-right mr-2"></span>24 Hours Services</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md">
+                    <div class="ftco-footer-widget mb-4">
+                        <h2 class="ftco-heading-2">Have a Questions?</h2>
+                        <div class="block-23 mb-3">
+                            <ul>
+                                <li><span class="icon icon-map-marker"></span><span class="text">Street 9, Maadi, Cairo, Egypt</span></li>
+                                <li><a href="#"><span class="icon icon-phone"></span><span class="text">11599</span></a></li>
+                                <li><a href="#"><span class="icon icon-envelope pr-4"></span><span class="text">info@medicure.com</span></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 text-center">
+
+                    <p>
+                        Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="@Url.Content("~/js/jquery.min.js")"></script>
+    <script src="@Url.Content("~/js/jquery-migrate-3.0.1.min.js")"></script>
+    <script src="@Url.Content("~/js/popper.min.js")"></script>
+    <script src="@Url.Content("~/js/bootstrap.min.js")"></script>
+    <script src="@Url.Content("~/js/jquery.easing.1.3.js")"></script>
+    <script src="@Url.Content("~/js/jquery.waypoints.min.js")"></script>
+    <script src="@Url.Content("~/js/jquery.stellar.min.js")"></script>
+    <script src="@Url.Content("~/js/owl.carousel.min.js")"></script>
+    <script src="@Url.Content("~/js/jquery.magnific-popup.min.js")"></script>
+    <script src="@Url.Content("~/js/aos.js")"></script>
+    <script src="@Url.Content("~/js/jquery.animateNumber.min.js")"></script>
+    <script src="@Url.Content("~/js/scrollax.min.js")"></script>
+    <script src="@Url.Content("~/js/google-map.js")"></script>
+    <script src="@Url.Content("~/js/main.js")"></script>
+
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,44 @@
+﻿@model HospitalManagementSystem2.Models.StaffSchedule
+
+@{
+    ViewData["Title"] = "Assign";
+}
+
+@{
+    SelectList Staff = new SelectList(ViewBag.Staff, "Id", "User.Name");
+    SelectList Schedules = new SelectList(ViewBag.Schedules, "Id", "DisplayText");
+  
+}
+<h1 class="text-center" style="color:rgb(24 187 155)">Assign Staff</h1>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+<form method="post" asp-action="SaveAssign" asp-controller="StaffSchedule">
+    
+    <div>
+    <label asp-for="StaffId"></label>
+        <select class="form form-control" asp-for="StaffId" asp-items="Staff">
+            <option value="0">Select a Staff Memeber </option>
+        </select>
+        <span class="text-danger" asp-validation-for="StaffId"></span>
+    </div>
+
+    <div>
+        <label asp-for="ScheduleId"></label>
+        <select class="form form-control" asp-for="ScheduleId" asp-items="Schedules">
+            <option value="0">Select Schedule</option>
+
+        </select>
+        <span class="text-danger" asp-validation-for="ScheduleId"></span>
+    </div>
+
+    <div class="d-flex justify-content-center">
+        <button class="btn btn-primary mt-3">Assign Schedule</button>
+    </div>
+  
+
+</form>

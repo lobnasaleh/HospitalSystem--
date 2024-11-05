@@ -1,0 +1,32 @@
+﻿@model IEnumerable<HospitalManagementSystem2.Models.Schedule>
+
+<h1>Schedules</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Available From</th>
+            <th>Available To</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var schedule in Model)
+        {
+            <tr>
+                <td>@schedule.Date.ToShortDateString()</td>
+                <td>@schedule.AvailableFrom</td>
+                <td>@schedule.AvailableTo</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@schedule.Id">Edit</a> |
+                    <a asp-action="Delete" asp-route-id="@schedule.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
