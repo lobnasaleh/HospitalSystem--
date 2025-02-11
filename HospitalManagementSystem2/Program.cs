@@ -1,12 +1,14 @@
-﻿using HospitalManagementSystem2.Models;
-using HospitalManagementSystem2.Repository;
-using HospitalManagementSystem2.Repository.Interfaces;
+﻿
+using HMS.DataAccess.Data;
+using HMS.DataAccess.Repository;
+using HMS.Entites.Interfaces;
+using HMS.Entities.Interfaces;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 
-namespace HospitalManagementSystem2
+namespace HMS.web
 {
     public class Program
     {
@@ -20,7 +22,9 @@ namespace HospitalManagementSystem2
 
             builder.Services.AddDbContext<HospitalContext>(options =>
             {
-                builder.Configuration.GetConnectionString("cs");
+                options.UseSqlServer(builder.Configuration.GetConnectionString("cs"),
+                b => b.MigrationsAssembly(typeof(HospitalContext).Assembly.FullName)
+                    );//ba2olo ye3ml el migrations folder fel DataAccess l2eno met3wed ye3mlha 3nd el startup project 
             });
 
             builder.Services.AddScoped<IAppointmentRepository, AppointmentRepository>();
@@ -28,6 +32,9 @@ namespace HospitalManagementSystem2
             builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
             builder.Services.AddScoped<IStaffRepository, StaffRepository>();
             builder.Services.AddScoped<IScheduleRepository, ScheduleRepository>();
+            builder.Services.AddScoped<IPatientRepository, PatientRepository>();
+            builder.Services.AddScoped<IMedicalHistoriesRepository, MedicalHistoriesRepository>();
+
 
 
             var app = builder.Build();

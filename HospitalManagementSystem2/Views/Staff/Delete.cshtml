@@ -1,4 +1,4 @@
-﻿@model HospitalManagementSystem2.Models.Staff
+﻿@model HMS.Entities.Models.Staff
 
 @* @{
     ViewData["Title"] = "Delete";
@@ -32,9 +32,9 @@
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.User)
         </dt>
-        <dd class="col-sm-10">
+       @*  <dd class="col-sm-10">
             @Html.DisplayFor(model => model.User.Name) <!-- Display user name instead of just ID -->
-        </dd>
+        </dd> *@
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.User.Email) <!-- Display user email -->
         </dt>

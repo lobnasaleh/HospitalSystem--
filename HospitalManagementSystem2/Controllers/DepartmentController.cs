@@ -1,8 +1,9 @@
-﻿using HospitalManagementSystem2.Models;
-using HospitalManagementSystem2.Repository.Interfaces;
+﻿
+using HMS.Entities.Interfaces;
+using HMS.Entities.Models;
 using Microsoft.AspNetCore.Mvc;
 
-namespace HospitalManagementSystem2.Controllers
+namespace HMS.web.Controllers
 {
     public class DepartmentController : Controller
     {

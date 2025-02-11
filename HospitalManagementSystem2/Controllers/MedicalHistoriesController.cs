@@ -4,10 +4,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using HospitalManagementSystem2.Models;
-using Microsoft.AspNetCore.Mvc.Rendering;
 
-namespace HospitalManagementSystem2.Controllers
+using Microsoft.AspNetCore.Mvc.Rendering;
+using HMS.DataAccess.Data;
+using HMS.Entities.Models;
+
+namespace HMS.web.Controllers
 {
     public class MedicalHistoriesController : Controller
     {

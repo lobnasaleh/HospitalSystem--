@@ -1,9 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using HospitalManagementSystem2.Models;
 using System.Linq;
+using HMS.DataAccess.Data;
+using HMS.Entities.Models;
 
-namespace HospitalManagementSystem2.Controllers
+namespace HMS.web.Controllers
 {
     public class ScheduleController : Controller
     {
@@ -37,10 +38,6 @@ namespace HospitalManagementSystem2.Controllers
             }
             return View(schedule); 
         }
-
-
-
-
         public IActionResult Edit(int? id)
         {
             if (id == null || id == 0)

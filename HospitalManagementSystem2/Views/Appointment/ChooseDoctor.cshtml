@@ -1,4 +1,4 @@
-﻿@model IEnumerable<HospitalManagementSystem2.Models.Staff>
+﻿@model IEnumerable<HMS.Entities.Models.Staff>
 
 @{
     ViewData["Title"] = "ChooseDoctor";
@@ -12,9 +12,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.Id)
             </th>
-            <th>
+           @*  <th>
                 @Html.DisplayNameFor(model => model.User.Name)
-            </th>
+            </th> *@
             <th>
                 @Html.DisplayNameFor(model => model.Qualification)
             </th>
@@ -31,8 +31,8 @@
                     @Html.DisplayFor(modelItem => item.Id)
             </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.User.Name)
-                </td>
+                 @*    @Html.DisplayFor(modelItem => item.User.Name)
+               *@  </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Qualification)
             </td>

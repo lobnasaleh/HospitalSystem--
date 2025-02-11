@@ -1,13 +1,15 @@
-using HospitalManagementSystem2.Models;
+
+using HMS.DataAccess.Data;
+using HMS.Entities.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.CodeDom;
 
-namespace HospitalManagementSystem2.Controllers
+namespace HMS.web.Controllers
 {
     public class PatientController : Controller
     {
-        HospitalContext context;
+        /*HospitalContext context;
         public PatientController(HospitalContext hospitalContext)
         {
             context=hospitalContext;
@@ -250,5 +252,6 @@ namespace HospitalManagementSystem2.Controllers
 
 
         }
+    }*/
     }
 }

@@ -1,4 +1,4 @@
-﻿@model IEnumerable<HospitalManagementSystem2.Models.Staff>
+﻿@model IEnumerable<HMS.Entities.Models.Staff>
 
 @* @{
     ViewData["Title"] = "Index";
@@ -14,8 +14,8 @@
 <table class="table">
     <thead>
         <tr>
-            <th>@Html.DisplayNameFor(model => model.First().User.Name)</th>
-            <th>@Html.DisplayNameFor(model => model.First().Position)</th>
+           @*  <th>@Html.DisplayNameFor(model => model.First().User.Name)</th>
+            *@ <th>@Html.DisplayNameFor(model => model.First().Position)</th>
             <th>@Html.DisplayNameFor(model => model.First().Qualification)</th>
             <th>@Html.DisplayNameFor(model => model.First().Department.Name)</th> 
             <th>Actions</th>
@@ -33,8 +33,8 @@
             foreach (var item in Model)
             {
                 <tr>
-                    <td>@Html.DisplayFor(modelItem => item.User.Name)</td>
-                    <td>@Html.DisplayFor(modelItem => item.Position)</td>
+                   @*  <td>@Html.DisplayFor(modelItem => item.User.Name)</td>
+                    *@ <td>@Html.DisplayFor(modelItem => item.Position)</td>
                     <td>@Html.DisplayFor(modelItem => item.Qualification)</td>
                     <td>@Html.DisplayFor(modelItem => item.Department.Name)</td> 
                     <td>

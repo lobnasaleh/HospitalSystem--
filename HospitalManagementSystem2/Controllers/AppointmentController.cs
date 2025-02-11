@@ -1,11 +1,10 @@
-﻿using HospitalManagementSystem2.Models;
-using HospitalManagementSystem2.Repository;
-using HospitalManagementSystem2.Repository.Interfaces;
-using HospitalManagementSystem2.ViewModel;
+﻿
+using HMS.Entities.Interfaces;
+using HMS.Entities.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
-namespace HospitalManagementSystem2.Controllers
+namespace HMS.web.Controllers
 {
     public class AppointmentController : Controller
     {

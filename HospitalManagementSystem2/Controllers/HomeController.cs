@@ -1,4 +1,5 @@
-using HospitalManagementSystem2.Models;
+
+using HMS.Entities.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 

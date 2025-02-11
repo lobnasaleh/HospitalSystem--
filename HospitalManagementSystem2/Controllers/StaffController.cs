@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using HMS.DataAccess.Data;
+using HMS.Entities.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using HospitalManagementSystem2.Models;
-
-namespace HospitalManagementSystem2.Controllers
+namespace HMS.web.Controllers
 {
     public class StaffController : Controller
     {
@@ -22,7 +22,7 @@ namespace HospitalManagementSystem2.Controllers
         public async Task<IActionResult> Index()
         {
             var hospitalContext = _context.Staff.Include(s => s.Department).Include(s => s.User);
-            return View(await hospitalContext.ToListAsync());
+            return View(await hospitalContext.ToListAsync());//await hospitalContext.ToListAsync()
         }
 
         // GET: Staff/Details/5
