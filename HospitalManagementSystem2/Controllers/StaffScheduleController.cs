@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace HMS.web.Controllers
 {
-    public class StaffScheduleController : Controller
+   /* public class StaffScheduleController : Controller
 
     {
         private readonly IStaffScheduleRepository staffScheduleRepository;
@@ -89,5 +89,5 @@ namespace HMS.web.Controllers
         }
 
 
-    }
+    }*/
 }

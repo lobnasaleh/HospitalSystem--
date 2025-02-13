@@ -21,7 +21,14 @@ namespace HMS.DataAccess.Data
             x.StaffId,
             x.ScheduleId
             });//composite key
+
+
             base.OnModelCreating(modelBuilder);
+
+            //Table Per Type
+            modelBuilder.Entity<ApplicationUser>().ToTable("AspNetUsers");
+            modelBuilder.Entity<Patient>().ToTable("Patients");
+            modelBuilder.Entity<Staff>().ToTable("Staff");
         }
 
 

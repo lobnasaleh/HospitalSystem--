@@ -1,10 +1,11 @@
 ﻿@model DepartmentViewModel
 
-<form asp-action="Add" asp-controller="Department">
+
+<form asp-action="UpdateDepartment" asp-controller="Department">
 
 
     <div class="container border-3 p-3 mb-3">
-        <h1 class=" text-white">Add New Department</h1>
+        <h1 class=" text-white">Update Department</h1>
         <hr />
         <div class="row">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -19,12 +20,11 @@
             </div>
 
             <div class="col-5 offset-2">
-                <input type="submit" value="Create" class="btn btn-success form-control" />
+                <input type="submit" value="Update" class="btn btn-success form-control" />
             </div>
             <div class="col-5 ">
                 <a asp-action="GetAllDepartments" asp-controller="Department" class="btn btn-primary form-control">Back</a>
             </div>
-
 
         </div>
 
@@ -35,9 +35,3 @@
 
 
 </form>
-@* @section scripts {
-    <partial name="_ValidationScriptsPartial" />
-} *@
-
-
-

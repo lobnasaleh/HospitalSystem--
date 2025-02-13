@@ -6,7 +6,7 @@
     <thead>
     <th>
             @if (Model != null && Model.Count > 0)
-            {
+            {@* 
                 if (Model[0].Staff?.User != null)
                 {
                     @:Doctor Name
@@ -18,7 +18,7 @@
                 else
                 {
                 <span>N/A</span> <!-- Fallback if neither user is available -->
-                }
+                } *@
             }
             else
             {
@@ -59,7 +59,7 @@
                 <td>@item.AppointmentDateTime.ToString("t")</td>
 
                 <td>@item.Status</td>
-                <td>
+               @*  <td>
                     @if (item.Staff?.User != null)//viewer is a patient
                     {
 
@@ -71,7 +71,7 @@
                       
                     }
                 </td>
-            
+             *@
             </tr>
          
 

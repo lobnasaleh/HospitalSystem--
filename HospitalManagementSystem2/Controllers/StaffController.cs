@@ -1,175 +1,135 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using HMS.DataAccess.Data;
+﻿using AutoMapper;
+using HMS.DataAccess.Repository;
+using HMS.Entites.Contracts;
+using HMS.Entites.Enums;
+using HMS.Entites.Interfaces;
+using HMS.Entites.ViewModel;
 using HMS.Entities.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
+
 namespace HMS.web.Controllers
 {
     public class StaffController : Controller
     {
-        private readonly HospitalContext _context;
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper mapper;
+        private readonly IAuthService _authService;
 
-        public StaffController(HospitalContext context)
+        public StaffController(IUnitOfWork _unitOfWork, IMapper mapper, IAuthService _authService)
         {
-            _context = context;
+            this._unitOfWork = _unitOfWork;
+            this.mapper = mapper;
+            this._authService = _authService;
         }
 
-        // GET: Staff
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var hospitalContext = _context.Staff.Include(s => s.Department).Include(s => s.User);
-            return View(await hospitalContext.ToListAsync());//await hospitalContext.ToListAsync()
+            var st = await _unitOfWork.StaffRepository.getAllAsync(s => !s.IsDeleted, new[] {"Department"} );
+            return View(st);
+
         }
-
-        // GET: Staff/Details/5
-        public async Task<IActionResult> Details(int? id)
+        [HttpGet]
+        public async Task<IActionResult> Create()
         {
-            if (id == null)
+            var depts=await _unitOfWork.DepartmentRepository.getAllAsync(d=>!d.IsDeleted);
+            var departmentList = depts.Select(d => new SelectListItem
             {
-                return NotFound();
-            }
+                Value=d.Id.ToString(),
+                Text=d.Name
+            });
+            ViewBag.Departments= departmentList;
 
-            var staff = await _context.Staff
-                .Include(s => s.Department)
-                .Include(s => s.User)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (staff == null)
-            {
-                return NotFound();
-            }
-
-            return View(staff);
-        }
-
-        // GET: Staff/Create
-        public IActionResult Create()
-        {
-            // Populate ViewBag.DepartmentId with the department list
-            ViewBag.DepartmentId = new SelectList(_context.Departments, "Id", "Name");
-            // Populate User dropdown list
-            ViewBag.UserId = new SelectList(_context.Users, "Id", "Name");
+            var pos = new SelectList(Enum.GetValues(typeof(Position)));
+            ViewBag.Position = pos;
             return View();
         }
 
-        // POST: Staff/Create
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Position,Qualification,UserId,DepartmentId")] Staff staff)
+        //admin only
+        public async Task<IActionResult> Create(RegisterStaffRequestVM staffFromReq)
+        {
+     
+            if (ModelState.IsValid)
+            {
+
+                Staff staff = await _unitOfWork.StaffRepository.getAsync(s => !s.IsDeleted && (s.Email==staffFromReq.Email || s.UserName==staffFromReq.Username), false);
+                if (staff != null)
+                {
+
+                    ModelState.AddModelError("Name", "A staff member with this Email or Username already exists.");
+                    return View(staffFromReq);
+                }
+                
+                var st = mapper.Map<RegisterStaffRequest>(staffFromReq);
+                await _authService.RegisterStaff(st);//need to handle the token
+               
+                return RedirectToAction("Index");
+            }
+            //to refill selects
+            var depts = await _unitOfWork.DepartmentRepository.getAllAsync(d => !d.IsDeleted);
+            var departmentList = depts.Select(d => new SelectListItem
+            {
+                Value = d.Id.ToString(),
+                Text = d.Name
+            });
+            ViewBag.Departments = departmentList;
+
+            var pos = new SelectList(Enum.GetValues(typeof(Position)));
+            ViewBag.Position = pos;
+
+            return View(staffFromReq);
+        }
+        [HttpGet]
+        public async Task<IActionResult> Update(string id)
+        {
+
+           Staff st= await _unitOfWork.StaffRepository.getAsync(s => s.Id == id,false);
+            if (st == null) { 
+              return NotFound();
+            }
+
+           // RegisterStaffRequestVM staff =mapper.Map<RegisterStaffRequestVM>(st);
+
+            var depts = await _unitOfWork.DepartmentRepository.getAllAsync(d => !d.IsDeleted);
+            var departmentList = depts.Select(d => new SelectListItem
+            {
+                Value = d.Id.ToString(),
+                Text = d.Name
+            });
+            ViewBag.Depts = departmentList;
+            return View();
+        }
+
+        [HttpPost]
+        //admin or staff
+        public async Task<IActionResult> Update(RegisterStaffRequestVM staffFromReq)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(staff);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
 
-            // Repopulate the Departments and users SelectList in case of validation error
-            ViewBag.DepartmentId = new SelectList(_context.Departments, "Id", "Name");
-            ViewBag.UserId = new SelectList(_context.Users, "Id", "Name", staff.UserId);
-            // Return the view with the model to preserve entered values
-            return View(staff);
-        }
-
-        // GET: Staff/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var staff = await _context.Staff.FindAsync(id);
-            if (staff == null)
-            {
-                return NotFound();
-            }
-            //Populate Department dropdown list
-            ViewBag.DepartmentId = new SelectList(_context.Departments, "Id", "Name");
-            // Populate User dropdown list
-            ViewBag.UserId = new SelectList(_context.Users, "Id", "Name", staff.UserId);
-
-            return View(staff);
-        }
-
-        // POST: Staff/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Position,Qualification,UserId,DepartmentId")] Staff staff)
-        {
-            if (id != staff.Id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
+                /*Staff staff = await _unitOfWork.StaffRepository.getAsync(s => !s.IsDeleted && (s.Email == staffFromReq.Email || s.UserName == staffFromReq.Username), false);
+                if (staff != null)
                 {
-                    _context.Update(staff);
-                    await _context.SaveChangesAsync();
+
+                    ModelState.AddModelError("Email", "A staff member with this Email or Username already exists.");
+                    return View(staffFromReq);
                 }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!StaffExists(staff.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+
+                var st = mapper.Map<RegisterStaffRequest>(staffFromReq);
+                await _authService.RegisterStaff(st);//need to handle the token
+
+                return RedirectToAction("Index");*/
             }
-            ViewData["DepartmentId"] = new SelectList(_context.Departments, "Id", "Name", staff.DepartmentId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Name", staff.UserId);
-            return View(staff);
+            return View(staffFromReq);
         }
 
-        // GET: Staff/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
 
-            var staff = await _context.Staff
-                .Include(s => s.Department)
-                .Include(s => s.User)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (staff == null)
-            {
-                return NotFound();
-            }
 
-            return View(staff);
-        }
 
-        // POST: Staff/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var staff = await _context.Staff.FindAsync(id);
-            if (staff != null)
-            {
-                _context.Staff.Remove(staff);
-            }
 
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
 
-        private bool StaffExists(int id)
-        {
-            return _context.Staff.Any(e => e.Id == id);
-        }
     }
 }

@@ -17,7 +17,7 @@
                 <span asp-validation-for="FullName" class="text-danger"></span>
 
             </div>
-             <div class="col-2">
+            <div class="col-2">
                 <label asp-for="Username" class="control-label text-white"></label>
 
             </div>
@@ -57,28 +57,26 @@
                 <input asp-for="Qualification" class="form-control pt-2 " />
                 <span asp-validation-for="Qualification" class="text-danger"></span>
 
-            </div>
-            <div class="col-2">
+            </div> <div class="col-2">
                 <label asp-for="Position" class="control-label text-white"></label>
 
             </div>
             <div class="col-10 pb-3">
-                <select asp-for="Position" asp-items="@ViewBag.Position" class="form-control pt-2">
-                    <option disabled selected>--Please Choose a Position--</option>
-                </select>
+                <input asp-for="Position" class="form-control pt-2 " />
                 <span asp-validation-for="Position" class="text-danger"></span>
-            </div>
-        <div class="col-2">
-            <label asp-for="DepartmentId" class="control-label text-white"></label>
 
-        </div>
-        <div class="col-10 pb-3">
-                <select asp-for="DepartmentId" asp-items="@ViewBag.Departments" class="form-control pt-2">
-                <option disabled selected>--Please Choose a Department--</option>
-                 </select>
+            </div>
+            <div class="col-2">
+                <label asp-for="DepartmentId" class="control-label text-white"></label>
+
+            </div>
+            <div class="col-10 pb-3">
+                <select asp-for="DepartmentId" asp-items="@ViewBag.Depts" class="form-control pt-2">
+                    <option disabled selected>--Please Choose a Department--</option>
+                </select>
                 <span asp-validation-for="DepartmentId" class="text-danger"></span>
-        </div>
-          
+            </div>
+
 
             <div class="col-5 offset-2">
                 <input type="submit" value="Create" class="btn btn-success w-100" />
@@ -86,16 +84,14 @@
             <div class="col-5 ">
                 <a asp-action="Index" asp-controller="Staff" class="btn btn-primary w-100">Back</a>
             </div>
-           
-            </div>
-            
 
         </div>
 
-  
+
+    </div>
+
+
 
 
 
 </form>
-
-

@@ -7,10 +7,10 @@ namespace HMS.Entities.Interfaces
 {
     public interface IStaffScheduleRepository:IBaseRepository<StaffSchedule>
     {
-        void AddStaffSchedule(StaffSchedule staffSchedule);
+        /*void AddStaffSchedule(StaffSchedule staffSchedule);
         public List<Schedule> getAvailableTimeSlots(int staffid);
 
-        public void save();
+        public void save();*/
 
 
     }

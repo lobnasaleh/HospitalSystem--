@@ -24,7 +24,7 @@ public partial class Schedule
     [DataType(DataType.Time)]
     public TimeOnly AvailableTo { get; set; }
 
-    public bool IsDeleted { get; set; }
+    public bool IsDeleted { get; set; } = false;
 
 
     public virtual ICollection<StaffSchedule>? StaffSchedules { get; set; } = new List<StaffSchedule>();

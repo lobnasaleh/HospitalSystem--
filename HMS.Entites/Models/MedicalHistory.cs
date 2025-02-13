@@ -12,9 +12,9 @@ public partial class MedicalHistory
 {
     public int Id { get; set; }
     [ForeignKey(nameof(Patient))]
-    public int PatientId { get; set; }
+    public string PatientId { get; set; }
     [ForeignKey(nameof(Staff))]
-    public int StaffId { get; set; }
+    public string StaffId { get; set; }
 
     public string Diagnosis { get; set; }
 

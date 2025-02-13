@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace HMS.web.Controllers
 {
-    public class AppointmentController : Controller
+    /*public class AppointmentController : Controller
     {
         IAppointmentRepository appointmentRepository;
         IStaffScheduleRepository scheduleRepository;
@@ -63,10 +63,10 @@ namespace HMS.web.Controllers
         //Appointment/GetAllDepartments
         public IActionResult GetAllDepartments()
         {
-
-            var departmentList = departmentRepository.GetAllDepartments();
+            //aseebha tanyy please
+          *//*  var departmentList = departmentRepository.GetAllDepartments();
             ViewBag.Departments = new SelectList(departmentList, "Id", "Name");
-            return View("ChooseDepartment");
+           *//* return View("ChooseDepartment");
         }
 
         public IActionResult Delete(int Id)
@@ -115,5 +115,5 @@ namespace HMS.web.Controllers
             return View("ChooseDoctor", staff);
         }
 
-    }
+    }*/
 }

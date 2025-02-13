@@ -193,44 +193,41 @@ namespace HMS.DataAccess.Migrations
                 name: "Patients",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Address = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Dob = table.Column<DateOnly>(type: "date", nullable: false),
-                    EmergencyContact = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    InsuranceProvider = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    InsuranceNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    DOB = table.Column<DateTime>(type: "date", nullable: false),
+                    EmergencyContact = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: false),
+                    InsuranceProvider = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    InsuranceNumber = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Patients", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Patients_AspNetUsers_UserId",
-                        column: x => x.UserId,
+                        name: "FK_Patients_AspNetUsers_Id",
+                        column: x => x.Id,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Staff",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Position = table.Column<int>(type: "int", nullable: false),
-                    Qualification = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    Qualification = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     DepartmentId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Staff", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Staff_AspNetUsers_UserId",
-                        column: x => x.UserId,
+                        name: "FK_Staff_AspNetUsers_Id",
+                        column: x => x.Id,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Staff_Departments_DepartmentId",
                         column: x => x.DepartmentId,
@@ -245,8 +242,8 @@ namespace HMS.DataAccess.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    PatientId = table.Column<int>(type: "int", nullable: false),
-                    StaffId = table.Column<int>(type: "int", nullable: false),
+                    PatientId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    StaffId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     DepartmentId = table.Column<int>(type: "int", nullable: false),
                     AppointmentDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Status = table.Column<string>(type: "nvarchar(max)", nullable: true)
@@ -264,14 +261,12 @@ namespace HMS.DataAccess.Migrations
                         name: "FK_Appointments_Patients_PatientId",
                         column: x => x.PatientId,
                         principalTable: "Patients",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Appointments_Staff_StaffId",
                         column: x => x.StaffId,
                         principalTable: "Staff",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -280,8 +275,8 @@ namespace HMS.DataAccess.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    PatientId = table.Column<int>(type: "int", nullable: false),
-                    StaffId = table.Column<int>(type: "int", nullable: false),
+                    PatientId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    StaffId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     Diagnosis = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TreatmentPlan = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Prescription = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -294,14 +289,12 @@ namespace HMS.DataAccess.Migrations
                         name: "FK_MedicalHistories_Patients_PatientId",
                         column: x => x.PatientId,
                         principalTable: "Patients",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_MedicalHistories_Staff_StaffId",
                         column: x => x.StaffId,
                         principalTable: "Staff",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -309,7 +302,7 @@ namespace HMS.DataAccess.Migrations
                 columns: table => new
                 {
                     ScheduleId = table.Column<int>(type: "int", nullable: false),
-                    StaffId = table.Column<int>(type: "int", nullable: false),
+                    StaffId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Id = table.Column<int>(type: "int", nullable: false),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
@@ -395,19 +388,9 @@ namespace HMS.DataAccess.Migrations
                 column: "StaffId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Patients_UserId",
-                table: "Patients",
-                column: "UserId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Staff_DepartmentId",
                 table: "Staff",
                 column: "DepartmentId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Staff_UserId",
-                table: "Staff",
-                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_StaffSchedules_ScheduleId",

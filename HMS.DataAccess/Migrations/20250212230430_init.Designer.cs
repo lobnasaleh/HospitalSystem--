@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HMS.DataAccess.Migrations
 {
     [DbContext(typeof(HospitalContext))]
-    [Migration("20250211181841_init")]
+    [Migration("20250212230430_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -99,6 +99,8 @@ namespace HMS.DataAccess.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
+
+                    b.UseTptMappingStrategy();
                 });
 
             modelBuilder.Entity("HMS.Entities.Models.Appointment", b =>
@@ -115,11 +117,11 @@ namespace HMS.DataAccess.Migrations
                     b.Property<int>("DepartmentId")
                         .HasColumnType("int");
 
-                    b.Property<int>("PatientId")
-                        .HasColumnType("int");
+                    b.Property<string>("PatientId")
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("StaffId")
-                        .HasColumnType("int");
+                    b.Property<string>("StaffId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Status")
                         .HasColumnType("nvarchar(max)");
@@ -166,14 +168,14 @@ namespace HMS.DataAccess.Migrations
                     b.Property<string>("Diagnosis")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("PatientId")
-                        .HasColumnType("int");
+                    b.Property<string>("PatientId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Prescription")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("StaffId")
-                        .HasColumnType("int");
+                    b.Property<string>("StaffId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("TreatmentPlan")
                         .HasColumnType("nvarchar(max)");
@@ -188,39 +190,6 @@ namespace HMS.DataAccess.Migrations
                     b.HasIndex("StaffId");
 
                     b.ToTable("MedicalHistories");
-                });
-
-            modelBuilder.Entity("HMS.Entities.Models.Patient", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Address")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateOnly>("Dob")
-                        .HasColumnType("date");
-
-                    b.Property<string>("EmergencyContact")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("InsuranceNumber")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("InsuranceProvider")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Patients");
                 });
 
             modelBuilder.Entity("HMS.Entities.Models.Schedule", b =>
@@ -248,39 +217,10 @@ namespace HMS.DataAccess.Migrations
                     b.ToTable("Schedules");
                 });
 
-            modelBuilder.Entity("HMS.Entities.Models.Staff", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("DepartmentId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Position")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Qualification")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DepartmentId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Staff");
-                });
-
             modelBuilder.Entity("HMS.Entities.Models.StaffSchedule", b =>
                 {
-                    b.Property<int>("StaffId")
-                        .HasColumnType("int");
+                    b.Property<string>("StaffId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("ScheduleId")
                         .HasColumnType("int");
@@ -431,6 +371,51 @@ namespace HMS.DataAccess.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("HMS.Entities.Models.Patient", b =>
+                {
+                    b.HasBaseType("HMS.Entites.Models.ApplicationUser");
+
+                    b.Property<DateTime>("DOB")
+                        .HasColumnType("date");
+
+                    b.Property<string>("EmergencyContact")
+                        .IsRequired()
+                        .HasMaxLength(15)
+                        .HasColumnType("nvarchar(15)");
+
+                    b.Property<string>("InsuranceNumber")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("InsuranceProvider")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.ToTable("Patients", (string)null);
+                });
+
+            modelBuilder.Entity("HMS.Entities.Models.Staff", b =>
+                {
+                    b.HasBaseType("HMS.Entites.Models.ApplicationUser");
+
+                    b.Property<int>("DepartmentId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Position")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Qualification")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasIndex("DepartmentId");
+
+                    b.ToTable("Staff", (string)null);
+                });
+
             modelBuilder.Entity("HMS.Entities.Models.Appointment", b =>
                 {
                     b.HasOne("HMS.Entities.Models.Department", "Department")
@@ -441,15 +426,11 @@ namespace HMS.DataAccess.Migrations
 
                     b.HasOne("HMS.Entities.Models.Patient", "Patient")
                         .WithMany("Appointments")
-                        .HasForeignKey("PatientId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("PatientId");
 
                     b.HasOne("HMS.Entities.Models.Staff", "Staff")
                         .WithMany()
-                        .HasForeignKey("StaffId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("StaffId");
 
                     b.Navigation("Department");
 
@@ -462,45 +443,15 @@ namespace HMS.DataAccess.Migrations
                 {
                     b.HasOne("HMS.Entities.Models.Patient", "Patient")
                         .WithMany("MedicalHistories")
-                        .HasForeignKey("PatientId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("PatientId");
 
                     b.HasOne("HMS.Entities.Models.Staff", "Staff")
                         .WithMany()
-                        .HasForeignKey("StaffId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("StaffId");
 
                     b.Navigation("Patient");
 
                     b.Navigation("Staff");
-                });
-
-            modelBuilder.Entity("HMS.Entities.Models.Patient", b =>
-                {
-                    b.HasOne("HMS.Entites.Models.ApplicationUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("HMS.Entities.Models.Staff", b =>
-                {
-                    b.HasOne("HMS.Entities.Models.Department", "Department")
-                        .WithMany("Staff")
-                        .HasForeignKey("DepartmentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("HMS.Entites.Models.ApplicationUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
-
-                    b.Navigation("Department");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("HMS.Entities.Models.StaffSchedule", b =>
@@ -573,6 +524,32 @@ namespace HMS.DataAccess.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("HMS.Entities.Models.Patient", b =>
+                {
+                    b.HasOne("HMS.Entites.Models.ApplicationUser", null)
+                        .WithOne()
+                        .HasForeignKey("HMS.Entities.Models.Patient", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("HMS.Entities.Models.Staff", b =>
+                {
+                    b.HasOne("HMS.Entities.Models.Department", "Department")
+                        .WithMany("Staff")
+                        .HasForeignKey("DepartmentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("HMS.Entites.Models.ApplicationUser", null)
+                        .WithOne()
+                        .HasForeignKey("HMS.Entities.Models.Staff", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Department");
+                });
+
             modelBuilder.Entity("HMS.Entities.Models.Department", b =>
                 {
                     b.Navigation("Appointments");
@@ -580,16 +557,16 @@ namespace HMS.DataAccess.Migrations
                     b.Navigation("Staff");
                 });
 
+            modelBuilder.Entity("HMS.Entities.Models.Schedule", b =>
+                {
+                    b.Navigation("StaffSchedules");
+                });
+
             modelBuilder.Entity("HMS.Entities.Models.Patient", b =>
                 {
                     b.Navigation("Appointments");
 
                     b.Navigation("MedicalHistories");
-                });
-
-            modelBuilder.Entity("HMS.Entities.Models.Schedule", b =>
-                {
-                    b.Navigation("StaffSchedules");
                 });
 
             modelBuilder.Entity("HMS.Entities.Models.Staff", b =>

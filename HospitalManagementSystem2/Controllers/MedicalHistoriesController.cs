@@ -11,7 +11,7 @@ using HMS.Entities.Models;
 
 namespace HMS.web.Controllers
 {
-    public class MedicalHistoriesController : Controller
+    /*public class MedicalHistoriesController : Controller
     {
         private readonly HospitalContext _context;
 
@@ -163,7 +163,7 @@ namespace HMS.web.Controllers
 
 
 
-
+*/
 
 
 }

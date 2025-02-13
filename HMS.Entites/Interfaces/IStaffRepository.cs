@@ -7,6 +7,6 @@ namespace HMS.Entities.Interfaces
 {
     public interface IStaffRepository:IBaseRepository<Staff>
     {
-        List<Staff> GetStaff();
+       
     }
 }

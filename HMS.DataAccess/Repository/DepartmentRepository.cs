@@ -13,20 +13,6 @@ namespace HMS.DataAccess.Repository
         {
             this.Context = Context;
         }
-        public void AddDepartment(Department dept)
-        {
-            Context.Departments.Add(dept);
-        }
-
-        public List<Department> GetAllDepartments()
-        {
-            List<Department> departments = Context.Departments.ToList();
-            return departments;
-        }
-
-        public void Save()
-        {
-            Context.SaveChanges();
-        }
+    
     }
 }

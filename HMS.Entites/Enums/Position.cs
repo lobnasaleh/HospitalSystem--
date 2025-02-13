@@ -8,6 +8,6 @@ namespace HMS.Entites.Enums
 {
     public enum Position
     {
-        NURSE,DOCTOR
+        DOCTOR=1,NURSE=2
     }
 }

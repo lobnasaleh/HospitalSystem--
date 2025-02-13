@@ -655,8 +655,8 @@ a:focus {
 .footer_section {
   background: darken($color: $primary2, $amount: 10);
   color: $white;
-  padding: 60px 0 15px 0;
-  position: relative;
+  /*padding: 60px 0 15px 0;
+  position: relative;*/
 
   h4 {
     font-weight: 600;
