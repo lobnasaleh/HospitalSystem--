@@ -22,7 +22,6 @@ namespace HMS.DataAccess.Data
             x.ScheduleId
             });//composite key
 
-
             base.OnModelCreating(modelBuilder);
 
             //Table Per Type

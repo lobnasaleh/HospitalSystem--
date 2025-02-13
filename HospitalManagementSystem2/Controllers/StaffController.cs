@@ -92,7 +92,7 @@ namespace HMS.web.Controllers
         public async Task<IActionResult> Update(string id)
         {
 
-           Staff st= await _unitOfWork.StaffRepository.getAsync(s => s.Id == id,false);
+           Staff st= await _unitOfWork.StaffRepository.getAsync(s => !s.IsDeleted && s.Id == id,false);
             if (st == null) { 
               return NotFound();
             }
@@ -170,24 +170,33 @@ namespace HMS.web.Controllers
         [HttpPost]
         public async Task<IActionResult> Delete(string id)
         {
-          /*  Staff s = await _unitOfWork.StaffRepository.getAsync(s=>s.Id==id);
+            Staff s = await _unitOfWork.StaffRepository.getAsync(s => s.Id == id);
+            StaffSchedule ss = await _unitOfWork.StaffScheduleRepository.getAsync(s =>s.StaffId==id);
+
             if (s is null)
             {
                 return NotFound();
             }
             //check if Staff is not assigned to any appointments in dates greater than today's date
 
-            Staff staff = await _unitOfWork.StaffRepository.getAsync(s => s.DepartmentId == id);
-            Appointment appointment = await unitOfWork.AppointmentRepository.getAsync(a => a.DepartmentId == id && a.AppointmentDateTime >= DateTime.Today);
-            if (appointment is not null || staff is not null)
-            {
-                return BadRequest("Can not delete a Department having upcoming appointments or assigned staff");
-            }
+            Appointment appointment = await _unitOfWork.AppointmentRepository.getAsync(a=>a.StaffId==id && a.AppointmentDateTime >=DateTime.Today);
+            if (appointment != null) { 
+            
+                    return BadRequest("Can not delete a Staff Member having upcoming appointments");
 
-            d.IsDeleted = true;
-            unitOfWork.DepartmentRepository.Update(d);
-            await unitOfWork.completeAsync();*/
-            return RedirectToAction("GetAllDepartments");
+            }
+            //mark the staff and staffschedule also deleted
+            if (ss != null)
+            {
+                ss.IsDeleted = true;
+                _unitOfWork.StaffScheduleRepository.Update(ss);
+
+            }
+            s.IsDeleted = true;
+            _unitOfWork.StaffRepository.Update(s);
+
+            await _unitOfWork.completeAsync();
+            return RedirectToAction("Index");
         }
 
 
