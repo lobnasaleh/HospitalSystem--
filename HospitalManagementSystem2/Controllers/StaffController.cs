@@ -42,8 +42,12 @@ namespace HMS.web.Controllers
             });
             ViewBag.Departments= departmentList;
 
-            var pos = new SelectList(Enum.GetValues(typeof(Position)));
-            ViewBag.Position = pos;
+            var positions = Enum.GetValues(typeof(Position))
+                    .Cast<Position>()
+                    .Select(e => new SelectListItem { Value = ((int)e).ToString(), Text = e.ToString() });
+
+            ViewBag.Positions =positions;
+
             return View();
         }
 
@@ -76,9 +80,11 @@ namespace HMS.web.Controllers
                 Text = d.Name
             });
             ViewBag.Departments = departmentList;
+            var positions = Enum.GetValues(typeof(Position))
+                               .Cast<Position>()
+                               .Select(e => new SelectListItem { Value = ((int)e).ToString(), Text = e.ToString() });
 
-            var pos = new SelectList(Enum.GetValues(typeof(Position)));
-            ViewBag.Position = pos;
+            ViewBag.Positions = positions;
 
             return View(staffFromReq);
         }
@@ -91,7 +97,7 @@ namespace HMS.web.Controllers
               return NotFound();
             }
 
-           // RegisterStaffRequestVM staff =mapper.Map<RegisterStaffRequestVM>(st);
+            RegisterStaffRequestVM staff =mapper.Map<RegisterStaffRequestVM>(st);
 
             var depts = await _unitOfWork.DepartmentRepository.getAllAsync(d => !d.IsDeleted);
             var departmentList = depts.Select(d => new SelectListItem
@@ -100,7 +106,7 @@ namespace HMS.web.Controllers
                 Text = d.Name
             });
             ViewBag.Depts = departmentList;
-            return View();
+            return View(staff);
         }
 
         [HttpPost]
