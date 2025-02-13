@@ -22,7 +22,7 @@ namespace HMS.Entites.ViewModel
         public string Qualification { get; set; }
 
         [ForeignKey(nameof(Department))]
-        [Range(1, int.MaxValue, ErrorMessage = "Please select a valid department.")]
+       // [Range(1, int.MaxValue, ErrorMessage = "Please select a valid department.")]
         [Required(ErrorMessage = "Department Name is required.")]
         [Display(Name ="Department")]
         public int DepartmentId { get; set; }
@@ -34,7 +34,9 @@ namespace HMS.Entites.ViewModel
         [Required]
         [RegularExpression(@"^[a-zA-Z0-9_]+$", ErrorMessage = "Username can only contain letters, numbers, and underscores.")]
         [StringLength(50, ErrorMessage = "Username can not exceed 50 characters!")]
-        public string Username { get; set; }
+    
+
+        public string UserName { get; set; }
 
 
         [Required]
@@ -48,7 +50,8 @@ namespace HMS.Entites.ViewModel
 
         [Required]
         [DataType(DataType.Password)]
-        public string Password { get; set; }
+        [Display(Name ="Password")]
+        public string PasswordHash { get; set; }
         
     }
 }

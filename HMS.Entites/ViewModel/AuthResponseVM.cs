@@ -12,6 +12,7 @@ namespace HMS.Entites.ViewModel
         public bool isAuthenticated { get; set; }
         public IEnumerable<string> Roles { get; set; }
         public string Message { get; set; }
+        public bool IsSuccess { get; set; }//new for update
         public string Username { get; set; }
         public string Email { get; set; }
         public DateTime ExpiresOn { get; set; }

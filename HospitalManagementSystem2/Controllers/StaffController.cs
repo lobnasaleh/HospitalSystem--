@@ -40,7 +40,7 @@ namespace HMS.web.Controllers
                 Value=d.Id.ToString(),
                 Text=d.Name
             });
-            ViewBag.Departments= departmentList;
+            ViewBag.Departments = departmentList;
 
             var positions = Enum.GetValues(typeof(Position))
                     .Cast<Position>()
@@ -59,7 +59,7 @@ namespace HMS.web.Controllers
             if (ModelState.IsValid)
             {
 
-                Staff staff = await _unitOfWork.StaffRepository.getAsync(s => !s.IsDeleted && (s.Email==staffFromReq.Email || s.UserName==staffFromReq.Username), false);
+                Staff staff = await _unitOfWork.StaffRepository.getAsync(s => !s.IsDeleted && (s.Email==staffFromReq.Email || s.UserName==staffFromReq.UserName), false);
                 if (staff != null)
                 {
 
@@ -97,7 +97,19 @@ namespace HMS.web.Controllers
               return NotFound();
             }
 
-            RegisterStaffRequestVM staff =mapper.Map<RegisterStaffRequestVM>(st);
+            RegisterStaffRequestVM staffmp = new RegisterStaffRequestVM()
+            {
+                PasswordHash = st.PasswordHash,
+                FullName = st.FullName,
+                Email = st.Email,
+                Position = (int)st.Position,
+                Address = st.Address,
+                DepartmentId = st.DepartmentId,
+                Qualification = st.Qualification,
+                UserName = st.UserName
+
+            };//from staff to staffmp
+
 
             var depts = await _unitOfWork.DepartmentRepository.getAllAsync(d => !d.IsDeleted);
             var departmentList = depts.Select(d => new SelectListItem
@@ -105,32 +117,79 @@ namespace HMS.web.Controllers
                 Value = d.Id.ToString(),
                 Text = d.Name
             });
-            ViewBag.Depts = departmentList;
-            return View(staff);
+            ViewBag.Departments = departmentList;
+
+            var positions = Enum.GetValues(typeof(Position))
+                              .Cast<Position>()
+                              .Select(e => new SelectListItem { Value = ((int)e).ToString(), Text = e.ToString() });
+
+            ViewBag.Positions = positions;
+
+            return View(staffmp);
         }
 
         [HttpPost]
         //admin or staff
-        public async Task<IActionResult> Update(RegisterStaffRequestVM staffFromReq)
+        public async Task<IActionResult> Update(string id,RegisterStaffRequestVM staffFromReq)
         {
             if (ModelState.IsValid)
             {
 
-                /*Staff staff = await _unitOfWork.StaffRepository.getAsync(s => !s.IsDeleted && (s.Email == staffFromReq.Email || s.UserName == staffFromReq.Username), false);
+                Staff staff = await _unitOfWork.StaffRepository.getAsync(s => !s.IsDeleted && (s.UserName == staffFromReq.UserName), false);
                 if (staff != null)
                 {
 
                     ModelState.AddModelError("Email", "A staff member with this Email or Username already exists.");
                     return View(staffFromReq);
                 }
+                var res= await _authService.UpdateStaffProfile(id, staffFromReq);
+                if (res.IsSuccess) { 
+                return RedirectToAction("Index");
 
-                var st = mapper.Map<RegisterStaffRequest>(staffFromReq);
-                await _authService.RegisterStaff(st);//need to handle the token
+                }
 
-                return RedirectToAction("Index");*/
             }
+            //to refill selects
+            var depts = await _unitOfWork.DepartmentRepository.getAllAsync(d => !d.IsDeleted);
+            var departmentList = depts.Select(d => new SelectListItem
+            {
+                Value = d.Id.ToString(),
+                Text = d.Name
+            });
+            ViewBag.Departments = departmentList;
+            var positions = Enum.GetValues(typeof(Position))
+                               .Cast<Position>()
+                               .Select(e => new SelectListItem { Value = ((int)e).ToString(), Text = e.ToString() });
+
+            ViewBag.Positions = positions;
+
             return View(staffFromReq);
+
         }
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(string id)
+        {
+          /*  Staff s = await _unitOfWork.StaffRepository.getAsync(s=>s.Id==id);
+            if (s is null)
+            {
+                return NotFound();
+            }
+            //check if Staff is not assigned to any appointments in dates greater than today's date
+
+            Staff staff = await _unitOfWork.StaffRepository.getAsync(s => s.DepartmentId == id);
+            Appointment appointment = await unitOfWork.AppointmentRepository.getAsync(a => a.DepartmentId == id && a.AppointmentDateTime >= DateTime.Today);
+            if (appointment is not null || staff is not null)
+            {
+                return BadRequest("Can not delete a Department having upcoming appointments or assigned staff");
+            }
+
+            d.IsDeleted = true;
+            unitOfWork.DepartmentRepository.Update(d);
+            await unitOfWork.completeAsync();*/
+            return RedirectToAction("GetAllDepartments");
+        }
+
 
 
 

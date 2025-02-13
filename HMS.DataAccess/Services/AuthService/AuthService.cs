@@ -2,6 +2,7 @@
 using HMS.Entites.Enums;
 using HMS.Entites.Interfaces;
 using HMS.Entites.Models;
+using HMS.Entites.ViewModel;
 using HMS.Entities.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
@@ -77,7 +78,7 @@ namespace HMS.DataAccess.Services.AuthService
             {
                 return new AuthResponse() { isAuthenticated = false, Message = "This Email is already Registered" };
             }
-            if (await _userManager.FindByNameAsync(registerRequest.Username) is not null)//we found a user with this username
+            if (await _userManager.FindByNameAsync(registerRequest.UserName) is not null)//we found a user with this username
             {
                 return new AuthResponse() { isAuthenticated = false, Message = "This Username is already Registered" };
             }
@@ -87,7 +88,7 @@ namespace HMS.DataAccess.Services.AuthService
 
                 Email = registerRequest.Email,
                 FullName = registerRequest.FullName,
-                UserName = registerRequest.Username,
+                UserName = registerRequest.UserName,
                 Address = registerRequest.Address,
                 DOB=registerRequest.DOB,
                 InsuranceNumber = registerRequest.InsuranceNumber,
@@ -96,7 +97,7 @@ namespace HMS.DataAccess.Services.AuthService
                 //el password ha ahotha ma3 el createasync
             };
             var errorslist = new List<string>();
-            var res = await _userManager.CreateAsync(patient, registerRequest.Password);
+            var res = await _userManager.CreateAsync(patient, registerRequest.PasswordHash);
             if (!res.Succeeded)
             {
                 foreach (var err in res.Errors)
@@ -134,13 +135,50 @@ namespace HMS.DataAccess.Services.AuthService
             };
         }
 
+        public async Task<AuthResponse>UpdateStaffProfile(string id, RegisterStaffRequestVM registerRequest)
+        {
+            AuthResponse auth = new AuthResponse();
+            //registerRequest.
+            Staff st= await _userManager.FindByIdAsync(id) as Staff;
+            if (st == null)
+            {
+                auth.Message = "No Staff With This ID is found";
+                auth.IsSuccess = false;
+                   return auth; 
+            }
+            //RegisterStaffRequestVM-->Staff
+            st.Address = registerRequest.Address;
+            st.FullName = registerRequest.FullName;
+            st.UserName = registerRequest.UserName;
+            st.PasswordHash = registerRequest.PasswordHash;
+            st.Position = (Position)registerRequest.Position;
+            st.Email = registerRequest.Email;
+            st.DepartmentId = registerRequest.DepartmentId;
+            st.Qualification = registerRequest.Qualification;
+
+            var result=  await _userManager.UpdateAsync(st);
+
+            if (result.Succeeded)
+            {
+                auth.Message = "Staff Info Updated Successfully";
+                auth.IsSuccess = true;
+            }
+            else
+            {
+                auth.Message = "Failed to Update Staff Info";
+                auth.IsSuccess = false;
+            }
+            return auth;
+        }
+
+
         public async Task<AuthResponse> RegisterStaff(RegisterStaffRequest registerRequest)
         {
             if (await _userManager.FindByEmailAsync(registerRequest.Email) is not null)//we found a user with this email
             {
                 return new AuthResponse() { isAuthenticated = false, Message = "This Email is already Registered" };
             }
-            if (await _userManager.FindByNameAsync(registerRequest.Username) is not null)//we found a user with this username
+            if (await _userManager.FindByNameAsync(registerRequest.UserName) is not null)//we found a user with this username
             {
                 return new AuthResponse() { isAuthenticated = false, Message = "This Username is already Registered" };
             }
@@ -150,7 +188,7 @@ namespace HMS.DataAccess.Services.AuthService
 
                 Email = registerRequest.Email,
                 FullName = registerRequest.FullName,
-                UserName = registerRequest.Username,
+                UserName = registerRequest.UserName,
                 Address = registerRequest.Address,
                 Position=(Position)registerRequest.Position,
                 Qualification=registerRequest.Qualification,
@@ -158,7 +196,7 @@ namespace HMS.DataAccess.Services.AuthService
                 //el password ha ahotha ma3 el createasync
             };
             var errorslist = new List<string>();
-            var res = await _userManager.CreateAsync(st, registerRequest.Password);
+            var res = await _userManager.CreateAsync(st, registerRequest.PasswordHash);
             if (!res.Succeeded)
             {
                 foreach (var err in res.Errors)

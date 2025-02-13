@@ -21,7 +21,7 @@ public partial class Staff:ApplicationUser
     public string Qualification { get; set; }
 
     [ForeignKey(nameof(Department))]
-    [Range(1, int.MaxValue, ErrorMessage = "Please select a valid department.")]
+   // [Range(1, int.MaxValue, ErrorMessage = "Please select a valid department.")]
     [Required(ErrorMessage = "Department Name is required.")]
     public int DepartmentId { get; set; }
 

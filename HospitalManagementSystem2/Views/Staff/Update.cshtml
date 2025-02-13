@@ -1,10 +1,10 @@
 ﻿@model HMS.Entites.ViewModel.RegisterStaffRequestVM
 
-<form asp-action="Create" asp-controller="Staff">
+<form asp-action="Update" asp-controller="Staff">
 
 
     <div class="container border-3 p-3 mb-3">
-        <h1 class=" text-white">Add New Staff Member</h1>
+        <h1 class=" text-white">Update Staff Member</h1>
         <hr />
         <div class="row">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -18,12 +18,12 @@
 
             </div>
             <div class="col-2">
-                <label asp-for="Username" class="control-label text-white"></label>
+                <label asp-for="UserName" class="control-label text-white"></label>
 
             </div>
             <div class="col-10 pb-3">
-                <input asp-for="Username" class="form-control pt-2 " />
-                <span asp-validation-for="Username" class="text-danger"></span>
+                <input asp-for="UserName" class="form-control pt-2 " />
+                <span asp-validation-for="UserName" class="text-danger"></span>
 
             </div> <div class="col-2">
                 <label asp-for="Address" class="control-label text-white"></label>
@@ -42,12 +42,12 @@
                 <span asp-validation-for="Email" class="text-danger"></span>
 
             </div> <div class="col-2">
-                <label asp-for="Password" class="control-label text-white"></label>
+                <label asp-for="PasswordHash" class="control-label text-white"></label>
 
             </div>
             <div class="col-10 pb-3">
-                <input asp-for="Password" class="form-control pt-2 " />
-                <span asp-validation-for="Password" class="text-danger"></span>
+                <input asp-for="PasswordHash" class="form-control pt-2 " />
+                <span asp-validation-for="PasswordHash" class="text-danger"></span>
 
             </div> <div class="col-2">
                 <label asp-for="Qualification" class="control-label text-white"></label>
@@ -57,21 +57,23 @@
                 <input asp-for="Qualification" class="form-control pt-2 " />
                 <span asp-validation-for="Qualification" class="text-danger"></span>
 
-            </div> <div class="col-2">
+            </div>
+            <div class="col-2">
                 <label asp-for="Position" class="control-label text-white"></label>
 
             </div>
             <div class="col-10 pb-3">
-                <input asp-for="Position" class="form-control pt-2 " />
+                <select asp-for="Position" asp-items="@ViewBag.Positions" class="form-control pt-2">
+                    <option disabled selected>--Please Choose a Position--</option>
+                </select>
                 <span asp-validation-for="Position" class="text-danger"></span>
-
             </div>
             <div class="col-2">
                 <label asp-for="DepartmentId" class="control-label text-white"></label>
 
             </div>
             <div class="col-10 pb-3">
-                <select asp-for="DepartmentId" asp-items="@ViewBag.Depts" class="form-control pt-2">
+                <select asp-for="DepartmentId" asp-items="@ViewBag.Departments" class="form-control pt-2">
                     <option disabled selected>--Please Choose a Department--</option>
                 </select>
                 <span asp-validation-for="DepartmentId" class="text-danger"></span>
@@ -79,7 +81,7 @@
 
 
             <div class="col-5 offset-2">
-                <input type="submit" value="Create" class="btn btn-success w-100" />
+                <input type="submit" value="Update" class="btn btn-success w-100" />
             </div>
             <div class="col-5 ">
                 <a asp-action="Index" asp-controller="Staff" class="btn btn-primary w-100">Back</a>
