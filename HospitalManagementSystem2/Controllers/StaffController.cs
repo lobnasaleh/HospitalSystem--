@@ -46,7 +46,7 @@ namespace HMS.web.Controllers
                     .Cast<Position>()
                     .Select(e => new SelectListItem { Value = ((int)e).ToString(), Text = e.ToString() });
 
-            ViewBag.Positions =positions;
+            ViewBag.Positions = positions;
 
             return View();
         }
@@ -135,6 +135,19 @@ namespace HMS.web.Controllers
         //admin or staff
         public async Task<IActionResult> Update(string id,RegisterStaffRequestVM staffFromReq)
         {
+            //to refill selects
+            var depts = await _unitOfWork.DepartmentRepository.getAllAsync(d => !d.IsDeleted);
+            var departmentList = depts.Select(d => new SelectListItem
+            {
+                Value = d.Id.ToString(),
+                Text = d.Name
+            });
+            ViewBag.Departments = departmentList;
+            var positions = Enum.GetValues(typeof(Position))
+                               .Cast<Position>()
+                               .Select(e => new SelectListItem { Value = ((int)e).ToString(), Text = e.ToString() });
+
+            ViewBag.Positions = positions;
             if (ModelState.IsValid)
             {
 
@@ -152,23 +165,25 @@ namespace HMS.web.Controllers
                 }
 
             }
-            //to refill selects
-            var depts = await _unitOfWork.DepartmentRepository.getAllAsync(d => !d.IsDeleted);
-            var departmentList = depts.Select(d => new SelectListItem
-            {
-                Value = d.Id.ToString(),
-                Text = d.Name
-            });
-            ViewBag.Departments = departmentList;
-            var positions = Enum.GetValues(typeof(Position))
-                               .Cast<Position>()
-                               .Select(e => new SelectListItem { Value = ((int)e).ToString(), Text = e.ToString() });
-
-            ViewBag.Positions = positions;
+        
 
             return View(staffFromReq);
 
         }
+
+
+        [HttpGet]
+        public async Task<IActionResult> ConfirmDelete(string id)
+        {
+            var staff = await _unitOfWork.StaffRepository.getAsync(ss => ss.Id == id);
+            if (staff == null)
+            {
+                return NotFound();
+            }
+            return View("Delete", staff);
+
+        }
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]
