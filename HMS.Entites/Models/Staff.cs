@@ -9,7 +9,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace HMS.Entities.Models;
 
-public partial class Staff:ApplicationUser
+public  class Staff:ApplicationUser
 {
    
    

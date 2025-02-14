@@ -1,11 +1,10 @@
-@model HMS.Entites.ViewModel.ScheduleVM
+﻿@model HMS.Entites.ViewModel.ScheduleVM
 
-
-<form asp-action="Create" asp-controller="Schedule">
+<form asp-action="Update" asp-controller="Schedule">
 
 
     <div class="container border-3 p-3 mb-3">
-        <h1 class=" text-white">Add a New Schedule</h1>
+        <h1 class=" text-white">Update Schedule</h1>
         <hr />
         <div class="row">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -33,12 +32,11 @@
             <div class="col-10 pb-3">
                 <input asp-for="AvailableTo" class="form-control pt-2 " />
                 <span asp-validation-for="AvailableTo" class="text-danger"></span>
-                  </div>
+
            
-
-
+                </div>
             <div class="col-5 offset-2">
-                <input type="submit" value="Create" class="btn btn-success w-100" />
+                <input type="submit" value="Update" class="btn btn-success w-100" />
             </div>
             <div class="col-5 ">
                 <a asp-action="Index" asp-controller="Schedule" class="btn btn-primary w-100">Back</a>
@@ -55,6 +53,3 @@
 
 </form>
 
-@* @section scripts {
-    <partial name="_ValidationScriptsPartial" />
-} *@

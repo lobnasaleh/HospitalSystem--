@@ -101,11 +101,23 @@ namespace HMS.web.Controllers
             return View(newdeptvm);
         }
 
+
+        [HttpGet]
+        public async Task<IActionResult> ConfirmDelete(int id)
+        {
+            var department = await unitOfWork.DepartmentRepository.getAsync(ss => ss.Id == id);
+            if (department == null)
+            {
+                return NotFound();
+            }
+            return View("Delete", department);
+
+        }
         //Department/DeleteDepartment/1
 
-        [HttpDelete]
+        [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteDepartment(int id)
+        public async Task<IActionResult> Delete(int id)
         {
            
                 Department d = await unitOfWork.DepartmentRepository.getAsync(d => d.Id == id);
@@ -119,8 +131,8 @@ namespace HMS.web.Controllers
               Appointment appointment = await unitOfWork.AppointmentRepository.getAsync(a=>a.DepartmentId==id && a.AppointmentDateTime>=DateTime.Today);
               if (appointment is not null || staff is not null)
               {
-                    return BadRequest("Can not delete a Department having upcoming appointments or assigned staff");
-              }
+                TempData["ErrorMessage"] = "Can not delete a Department having upcoming appointments or assigned staff";
+                    return RedirectToAction("GetAllDepartments"); }
 
                 d.IsDeleted = true;
                 unitOfWork.DepartmentRepository.Update(d);

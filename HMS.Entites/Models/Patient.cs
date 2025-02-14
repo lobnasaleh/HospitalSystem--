@@ -8,7 +8,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace HMS.Entities.Models;
 
-public partial class Patient:ApplicationUser
+public class Patient:ApplicationUser
 {
    
     [Required]

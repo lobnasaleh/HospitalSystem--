@@ -52,6 +52,7 @@ namespace HMS.web.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         //admin only
         public async Task<IActionResult> Create(RegisterStaffRequestVM staffFromReq)
         {
@@ -129,6 +130,8 @@ namespace HMS.web.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
+
         //admin or staff
         public async Task<IActionResult> Update(string id,RegisterStaffRequestVM staffFromReq)
         {
@@ -168,6 +171,7 @@ namespace HMS.web.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(string id)
         {
             Staff s = await _unitOfWork.StaffRepository.getAsync(s => s.Id == id);

@@ -4,6 +4,7 @@ using HMS.DataAccess.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HMS.DataAccess.Migrations
 {
     [DbContext(typeof(HospitalContext))]
-    partial class HospitalContextModelSnapshot : ModelSnapshot
+    [Migration("20250214202339_droppingnonPKColumn")]
+    partial class droppingnonPKColumn
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -131,7 +134,7 @@ namespace HMS.DataAccess.Migrations
 
                     b.HasIndex("StaffId");
 
-                    b.ToTable("Appointments", (string)null);
+                    b.ToTable("Appointments");
                 });
 
             modelBuilder.Entity("HMS.Entities.Models.Department", b =>
@@ -151,7 +154,7 @@ namespace HMS.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Departments", (string)null);
+                    b.ToTable("Departments");
                 });
 
             modelBuilder.Entity("HMS.Entities.Models.MedicalHistory", b =>
@@ -186,7 +189,7 @@ namespace HMS.DataAccess.Migrations
 
                     b.HasIndex("StaffId");
 
-                    b.ToTable("MedicalHistories", (string)null);
+                    b.ToTable("MedicalHistories");
                 });
 
             modelBuilder.Entity("HMS.Entities.Models.Schedule", b =>
@@ -211,7 +214,7 @@ namespace HMS.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Schedules", (string)null);
+                    b.ToTable("Schedules");
                 });
 
             modelBuilder.Entity("HMS.Entities.Models.StaffSchedule", b =>
@@ -232,7 +235,7 @@ namespace HMS.DataAccess.Migrations
 
                     b.HasIndex("ScheduleId");
 
-                    b.ToTable("StaffSchedules", (string)null);
+                    b.ToTable("StaffSchedules");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

@@ -3,122 +3,176 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using HMS.DataAccess.Data;
 using HMS.Entities.Models;
+using HMS.Entites.Interfaces;
+using AutoMapper;
+using HMS.Entites.ViewModel;
 
 namespace HMS.web.Controllers
 {
     public class ScheduleController : Controller
     {
-        private readonly HospitalContext _context;
 
-        public ScheduleController(HospitalContext context)
+        private readonly IUnitOfWork unitOfWork;
+        private readonly IMapper mapper;
+        public ScheduleController(IUnitOfWork unitOfWork, IMapper mapper)
         {
-            _context = context;
+            this.unitOfWork = unitOfWork;
+            this.mapper = mapper;
+        }
+        [HttpGet]
+        public async Task<IActionResult> Index()
+        {
+            var s = await unitOfWork.ScheduleRepository.getAllAsync(s=>!s.IsDeleted);
+            return View(s);
         }
 
-        public IActionResult Index()
-        {
-            var schedules = _context.Schedules.ToList();
-            return View(schedules);
-        }
-
-        public IActionResult Create()
+        [HttpGet]
+        public async Task<IActionResult> Create()
         {
             return View();
         }
 
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create([Bind("Id,Date,AvailableFrom,AvailableTo")] Schedule schedule)
+        public async Task<IActionResult> Create(ScheduleVM scheduleVM)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(scheduleVM);
+            }
+            Schedule s = await unitOfWork.ScheduleRepository.getAsync(s =>
+            !s.IsDeleted &&
+            s.AvailableFrom == scheduleVM.AvailableFrom &&
+            s.AvailableTo == scheduleVM.AvailableTo &&
+            s.Date == scheduleVM.Date
+            );
+            if (s != null)
+            {
+
+                ModelState.AddModelError("Date", "This Schedule already exists");
+                return View(scheduleVM);
+
+            }
+            if (scheduleVM.Date < DateTime.Today)
+            {
+                ModelState.AddModelError("Date", "Schedule Date should be greater than today's date ");
+                return View(scheduleVM);
+            }
+            if (scheduleVM.AvailableFrom >= scheduleVM.AvailableTo)
+            {
+                ModelState.AddModelError("AvailableFrom", " Start time should be greater than End Time");
+
+                return View(scheduleVM);
+            }
+
+            Schedule ss = mapper.Map<Schedule>(scheduleVM);
+            await unitOfWork.ScheduleRepository.AddAsync(ss);
+            await unitOfWork.completeAsync();
+            return RedirectToAction("Index");
+        }
+        [HttpGet]
+        public async Task<IActionResult> Update(int id)
+        {
+
+            Schedule s = await unitOfWork.ScheduleRepository.getAsync(s => !s.IsDeleted && s.Id == id, false);
+            if (s == null)
+            {
+                return NotFound();
+            }
+
+            //map schedule yo schedulevm
+            ScheduleVM ss = mapper.Map<ScheduleVM>(s);
+            return View(ss);
+
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Update(int id, ScheduleVM scheduleVM)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(schedule);
-                _context.SaveChanges();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(schedule); 
-        }
-        public IActionResult Edit(int? id)
-        {
-            if (id == null || id == 0)
-            {
-                return NotFound();
-            }
+                Schedule s = await unitOfWork.ScheduleRepository.getAsync(s => !s.IsDeleted && s.Id == id, false);
+                if (s == null)
+                {
+                    return NotFound();
+                }
+                Schedule sss = await unitOfWork.ScheduleRepository.getAsync(s =>
+                 s.AvailableFrom == scheduleVM.AvailableFrom &&
+                 s.AvailableTo == scheduleVM.AvailableTo &&
+                 s.Date == scheduleVM.Date, false);
+                if (sss != null)
+                {
 
-            var schedule = _context.Schedules.Find(id);
+                    ModelState.AddModelError("Date", "This Schedule already exists");
+                    return View(scheduleVM);
+
+                }
+                if (scheduleVM.Date < DateTime.Today)
+                {
+                    ModelState.AddModelError("Date", "Schedule Date should be greater than today's date");
+                    return View(scheduleVM);
+                }
+                if (scheduleVM.AvailableFrom >= scheduleVM.AvailableTo)
+                {
+                    ModelState.AddModelError("AvailableFrom", " Start time should be greater than End Time");
+
+                    return View(scheduleVM);
+                }
+
+                //check if  available from > available to invalid or date <today
+
+                //map scheduleVm to schedule
+                Schedule ss = mapper.Map<Schedule>(scheduleVM);//agarb asheel el assignment
+                ss.Id = id;
+                unitOfWork.ScheduleRepository.Update(ss);
+                await unitOfWork.completeAsync();
+                return RedirectToAction("Index");
+            }
+            return View(scheduleVM);
+
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ConfirmDelete(int id)
+        {
+            var schedule=await unitOfWork.ScheduleRepository.getAsync(ss=>ss.Id == id);
             if (schedule == null)
             {
                 return NotFound();
             }
-            return View(schedule);
+                return View("Delete", schedule);
+
         }
 
-        
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(int id, [Bind("Id,Date,AvailableFrom,AvailableTo")] Schedule schedule)
-        {
-            if (id != schedule.Id)
+        public async Task<IActionResult> Delete(int id)
+        { 
+        Schedule schd=await unitOfWork.ScheduleRepository.getAsync(s=>!s.IsDeleted && s.Id == id);
+            if (schd is null)
             {
                 return NotFound();
             }
+            //is this schedule assigned to a staff 
+        StaffSchedule stsc= await unitOfWork.StaffScheduleRepository.getAsync(ss=>ss.ScheduleId == id);
+            if (stsc != null) {
 
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(schedule);
-                    _context.SaveChanges();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!_context.Schedules.Any(e => e.Id == schedule.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                TempData["ErrorMessage"] = "can not delete this schedule as it is already assigned to a staff member.";
+                return RedirectToAction("Index");
+
+                //can not delete this schedule as it is already assigned to a staff member
             }
-            return View(schedule);
-        }
+            schd.IsDeleted = true;
+            unitOfWork.ScheduleRepository.Update(schd);
+            await unitOfWork.completeAsync();
+            TempData["ErrorMessage"] = "Schedule deleted Successfully";
 
+            return RedirectToAction("Index");
         
-        public IActionResult Delete(int? id)
-        {
-            if (id == null || id == 0)
-            {
-                return NotFound();
-            }
-
-            var schedule = _context.Schedules
-                .FirstOrDefault(m => m.Id == id);
-            if (schedule == null)
-            {
-                return NotFound();
-            }
-
-            return View(schedule);
-        }
-        [HttpPost, ActionName("DeleteConfirmed")]
-        [ValidateAntiForgeryToken]
-        public IActionResult DeleteConfirmed(int id)
-        {
-            var schedule = _context.Schedules.Find(id);
-            if (schedule == null)
-            {
-                return NotFound();
-            }
-
-            _context.Schedules.Remove(schedule);
-            _context.SaveChanges();
-
-            return RedirectToAction(nameof(Index));
         }
 
 
     }
 }
+

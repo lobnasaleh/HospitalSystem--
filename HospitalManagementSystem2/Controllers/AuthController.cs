@@ -36,5 +36,7 @@ namespace HMS.web.Controllers
 
             return RedirectToAction("Index", "Home");
         }
+        //update 
+        //delete
     }
 }
