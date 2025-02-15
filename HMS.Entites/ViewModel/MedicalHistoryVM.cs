@@ -13,10 +13,12 @@ namespace HMS.Entites.ViewModel
     {
 
         public int AppointmentId { get; set; }
+        
+        [Display(Name="Patient's Full Name")]
+        [Required(ErrorMessage = "Patient's Full Name is required")]
         public string FullName { get; set; }//PatientName //readonly
 
         public DateTime AppointmentDateTime { get; set; } //readonly
-
 
         [MaxLength(500, ErrorMessage = "Diagnosis can not exceed 500 characters")]
         [Required(ErrorMessage = "Diagnosis is required.")]

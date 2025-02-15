@@ -53,10 +53,10 @@ namespace HMS.web
             builder.Services.AddScoped<IAppointmentRepository, AppointmentRepository>();
             builder.Services.AddScoped<IStaffScheduleRepository, StaffScheduleRepository>();
            // builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
-            builder.Services.AddScoped<IStaffRepository, StaffRepository>();
-            builder.Services.AddScoped<IScheduleRepository, ScheduleRepository>();
+           // builder.Services.AddScoped<IStaffRepository, StaffRepository>();
+          //  builder.Services.AddScoped<IScheduleRepository, ScheduleRepository>();
             builder.Services.AddScoped<IPatientRepository, PatientRepository>();
-            builder.Services.AddScoped<IMedicalHistoriesRepository, MedicalHistoriesRepository>();
+          //  builder.Services.AddScoped<IMedicalHistoriesRepository, MedicalHistoriesRepository>();
 
 
 

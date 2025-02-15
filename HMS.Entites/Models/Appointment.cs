@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using HMS.Entites.Enums;
 
 namespace HMS.Entities.Models;
 
@@ -22,7 +23,7 @@ public class Appointment
 
     public DateTime AppointmentDateTime { get; set; }
 
-    public string Status { get; set; }
+    public AppointmentStatus Status { get; set; }
   
     //Navigation Properties
     public virtual Patient? Patient { get; set; }

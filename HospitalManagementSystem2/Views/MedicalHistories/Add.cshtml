@@ -1,0 +1,74 @@
+﻿@model HMS.Entites.ViewModel.MedicalHistoryVM
+
+<form asp-action="Create" asp-controller="Schedule">
+
+
+    <div class="container border-3 p-3 mb-3">
+        <h1 class=" text-white">Add Medical History For this Appointment</h1>
+        <hr />
+        <div class="row">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="col-2">
+                <label asp-for="FullName" class="control-label text-white"></label>
+
+            </div>
+            <div class="col-10 pb-3">
+                <input asp-for="FullName" class="form-control pt-2 " />
+                <span asp-validation-for="FullName" class="text-danger"></span>
+
+            </div>
+            <div class="col-2">
+                <label asp-for="AppointmentDateTime" class="control-label text-white"></label>
+
+            </div>
+            <div class="col-10 pb-3">
+                <input asp-for="AppointmentDateTime" class="form-control pt-2 " />
+                <span asp-validation-for="AppointmentDateTime" class="text-danger"></span>
+
+            </div>
+            <div class="col-2">
+                <label asp-for="Diagnosis" class="control-label text-white"></label>
+
+            </div>
+            <div class="col-10 pb-3">
+                <input asp-for="Diagnosis" class="form-control pt-2 " />
+                <span asp-validation-for="Diagnosis" class="text-danger"></span>
+            </div>
+
+               <div class="col-2">
+                <label asp-for="TreatmentPlan" class="control-label text-white"></label>
+
+            </div>
+            <div class="col-10 pb-3">
+                <input asp-for="TreatmentPlan" class="form-control pt-2 " />
+                <span asp-validation-for="TreatmentPlan" class="text-danger"></span>
+            </div>
+            <div class="col-2">
+                <label asp-for="Prescription" class="control-label text-white"></label>
+
+            </div>
+            <div class="col-10 pb-3">
+                <input asp-for="Prescription" class="form-control pt-2 " />
+                <span asp-validation-for="Prescription" class="text-danger"></span>
+            </div>
+
+            <input type="hidden" asp-for="AppointmentId" />
+
+
+            <div class="col-5 offset-2">
+                <input type="submit" value="Create" class="btn btn-success w-100" />
+            </div>
+            <div class="col-5 ">
+                <a asp-action="Index" asp-controller="Schedule" class="btn btn-primary w-100">Back</a>
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+
+
+
+</form>

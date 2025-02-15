@@ -8,138 +8,76 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using HMS.DataAccess.Data;
 using HMS.Entities.Models;
+using HMS.Entites.Interfaces;
+using AutoMapper;
+using HMS.Entites.ViewModel;
 
 namespace HMS.web.Controllers
 {
-    /*public class MedicalHistoriesController : Controller
+    public class MedicalHistoriesController : Controller
     {
-        private readonly HospitalContext _context;
+        private readonly IUnitOfWork unitOfWork;
+        private readonly IMapper mapper;
 
-        public MedicalHistoriesController(HospitalContext context)
+        public MedicalHistoriesController(IUnitOfWork unitOfWork, IMapper mapper)
         {
-            _context = context;
+            this.unitOfWork = unitOfWork;
+            this.mapper = mapper;
         }
 
-        // GET: MedicalHistories (for users without specifying patient ID)
-        public async Task<IActionResult> Index()
+        [HttpGet] //getting medical history of this dr
+        public async Task<IActionResult> GetWrittenDoctorHistories()
         {
-            var hospitalContext = _context.MedicalHistories.Include(m => m.Patient).Include(m => m.Staff);
-            return View(await hospitalContext.ToListAsync());
+            // string docid = User.FindFirstValue(ClaimTypes.NameIdentifier); ma ansash azabtha
+
+            var medicalhistorieswrittenbydoc = await unitOfWork.MedicalHistoriesRepository.getAllAsync(md => md.Appointment.StaffId == "1a2b3c4d-1234-5678-90ab-cdef12345678", new[] { "Appointment.Patient" });
+
+            return View(medicalhistorieswrittenbydoc);
         }
 
-        // GET: MedicalHistories/PatientHistory/5 (for patients with specified patient ID)
-        public async Task<IActionResult> PatientHistory(int? patientId)
+
+
+        [HttpGet]
+        public async Task<IActionResult> Add(int AppointmentId)
         {
-            if (patientId == null)
-            {
+            Appointment AP = await unitOfWork.AppointmentRepository.getAsync(ap => ap.Id == AppointmentId, false, new[] { "Patient" });
+            if (AP == null) {
                 return NotFound();
             }
+            //map appointment to medicalhistoryvm
+            MedicalHistoryVM mh = mapper.Map<MedicalHistoryVM>(AP);
 
-            var medicalHistories = await _context.MedicalHistories
-                .Include(m => m.Patient)
-                .Include(m => m.Staff)
-                .Where(m => m.PatientId == patientId)
-                .ToListAsync();
-
-            if (medicalHistories == null || !medicalHistories.Any())
-            {
-                return NotFound();
-            }
-
-            return View("PatientHistory", medicalHistories);
+            return View(mh);
         }
 
-        // GET: MedicalHistories/CreateOrUpdate (for showing the create/edit form)
-        public IActionResult CreateOrUpdate(int? id)
-        {
-            // NEW: Populate ViewBag for dropdowns
-            ViewData["PatientId"] = new SelectList(_context.Patients, "Id", "Name"); // NEW
-            ViewData["StaffId"] = new SelectList(_context.Staff, "Id", "Name"); // NEW
+       // [HttpPost]
 
-            if (id == null)
-            {
-                // Creating a new medical history
-                return View(new MedicalHistory());
-            }
-            else
-            {
-                // Editing an existing medical history
-                var medicalHistory = _context.MedicalHistories.Find(id);
-                if (medicalHistory == null)
-                {
-                    return NotFound();
-                }
-                return View(medicalHistory);
-            }
-        }
+        /*  public async Task<IActionResult> Add(MedicalHistoryVM medicalhistoryfromreq)
+          {
+              if (ModelState.IsValid) {
 
-        // POST: MedicalHistories/CreateOrUpdate
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateOrUpdate([Bind("Id,PatientId,StaffId,Diagnosis,TreatmentPlan,Prescription,VisitedDate")] MedicalHistory medicalHistory)
-        {
-            if (ModelState.IsValid)
-            {
-                if (medicalHistory.Id == 0)
-                {
-                    _context.Add(medicalHistory);
-                }
-                else
-                {
-                    _context.Update(medicalHistory);
-                }
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
+                  //not having already a medical history for this appointment
+                var md=  await unitOfWork.MedicalHistoriesRepository.getAsync(m=>m.AppointmentId==medicalhistoryfromreq.AppointmentId);
+                  if (md != null) {
 
-            // NEW: Populate ViewBag for dropdowns in case of model validation failure
-            ViewData["PatientId"] = new SelectList(_context.Patients, "Id", "Name", medicalHistory.PatientId); // NEW
-            ViewData["StaffId"] = new SelectList(_context.Staff, "Id", "Name", medicalHistory.StaffId); // NEW
-            return View(medicalHistory);
-        }
+                      TempData["Error"] = "You have already written the Medical history for this appointment";
+                      return RedirectToAction("GetWrittenDoctorHistories");
 
-        private bool MedicalHistoryExists(int id)
-        {
-            return _context.MedicalHistories.Any(e => e.Id == id);
-   }
+                  }
+
+                  //map to medicalhistory
+                  MedicalHistory mapped= mapper.Map<MedicalHistory>(medicalhistoryfromreq);
+                  await unitOfWork.MedicalHistoriesRepository.AddAsync(mapped);
+                  await unitOfWork.completeAsync();
+               return RedirectToAction("AppointmentOfDoc", "Appointment");
+              }
 
 
+             // return View(mh);
+          }
+  */
 
 
-        // GET: MedicalHistories/Delete/
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var medicalHistory = await _context.MedicalHistories
-                .Include(m => m.Patient)
-                .Include(m => m.Staff)
-                .FirstOrDefaultAsync(m => m.Id == id);
-
-            if (medicalHistory == null)
-            {
-                return NotFound();
-            }
-
-            return View(medicalHistory);
-        }
-
-        // POST: MedicalHistories/Delete/
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var medicalHistory = await _context.MedicalHistories.FindAsync(id);
-            if (medicalHistory != null)
-            {
-                _context.MedicalHistories.Remove(medicalHistory);
-                await _context.SaveChangesAsync();
-            }
-            return RedirectToAction(nameof(Index));
-        }
 
 
 
@@ -149,21 +87,6 @@ namespace HMS.web.Controllers
 
 
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-*/
 
 
 }

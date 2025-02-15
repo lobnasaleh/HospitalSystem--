@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace HMS.Entites.ViewModel
 {
-    public class AppointmentOfDoctorVM
+    public class DoctorUpcomingAppointments
     {
         public string PatientId { get; set; }
         public int DepartmentId { get; set; }

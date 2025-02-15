@@ -17,7 +17,7 @@ namespace HMS.DataAccess.Repository
         {
             this._context = _context;
             patientRepository = new PatientRepository(_context);
-            MedicalHistories=new MedicalHistoriesRepository(_context);
+            MedicalHistoriesRepository = new MedicalHistoriesRepository(_context);
             StaffRepository=new StaffRepository(_context);  
             ScheduleRepository=new ScheduleRepository(_context);
             StaffScheduleRepository=new StaffScheduleRepository(_context);
@@ -27,7 +27,7 @@ namespace HMS.DataAccess.Repository
 
         public IPatientRepository patientRepository { get; private set; }
 
-        public IMedicalHistoriesRepository MedicalHistories { get; private set; }
+        public IMedicalHistoriesRepository MedicalHistoriesRepository { get; private set; }
 
         public IStaffRepository StaffRepository { get; private set; }
 

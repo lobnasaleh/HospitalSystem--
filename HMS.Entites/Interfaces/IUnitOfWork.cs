@@ -10,7 +10,7 @@ namespace HMS.Entites.Interfaces
     public interface IUnitOfWork:IDisposable
     {
         public IPatientRepository patientRepository { get; }
-        public IMedicalHistoriesRepository MedicalHistories {  get; }
+        public IMedicalHistoriesRepository MedicalHistoriesRepository {  get; }
         public IStaffRepository StaffRepository { get; }
         public IScheduleRepository ScheduleRepository { get; }
         public IStaffScheduleRepository StaffScheduleRepository { get; }
