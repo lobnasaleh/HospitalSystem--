@@ -26,11 +26,7 @@ public class Patient:ApplicationUser
     [StringLength(20)]
     [RegularExpression(@"^\d{10,20}$", ErrorMessage = "Insurance number must be between 10 and 20 digits.")]
     public string InsuranceNumber { get; set; }
-
-
     public virtual ICollection<Appointment>? Appointments { get; set; } = new List<Appointment>();
-
-    public virtual ICollection<MedicalHistory>? MedicalHistories { get; set; } = new List<MedicalHistory>();
 
 
    /* [ForeignKey(nameof(User))]

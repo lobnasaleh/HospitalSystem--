@@ -1,0 +1,42 @@
+﻿@model IEnumerable<HMS.Entities.Models.Appointment>
+<div class="container p-4">
+
+    <div class="row pb-2">
+
+        <div class="col">
+            <h1 class="text-white">Hi Doctor, This is your Appointments List</h1>
+        </div>
+       
+
+    </div>
+
+    <table class="table table-bordered table-hover table-info">
+
+        <thead>
+
+        <th>Date</th>
+        <th>Available From</th>
+        <th>Available To</th>
+
+        </thead>
+        <tbody>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+
+
+                    <td>@item.Patient</td>
+                    <td>@item.Staff</td>
+                    <td>@item.Department</td>
+                    <i class="bi bi-window-plus"></i>
+                    <td> <a asp-action="Add" asp-controller="MedicalHistories" asp-route-AppointmentId="@item.Id" class="btn btn-success">Add Medical History <i class="bi bi-window-plus"></i></a></td>
+                    <td> <a asp-action="Update" asp-controller="MedicalHistories" asp-route-AppointmentId="@item.Id" class="btn btn-primary">Update Medical History <i class="bi bi-pencil-square"></i></a></td>
+
+                   
+                </tr>
+            }
+        </tbody>
+
+    </table>
+</div>

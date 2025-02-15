@@ -22,6 +22,13 @@ namespace HMS.DataAccess.Data
             x.ScheduleId
             });//composite key
 
+            modelBuilder.Entity<MedicalHistory>()
+                .HasOne(m=>m.Appointment)
+                .WithOne(a=>a.MedicalHistory)
+                .HasForeignKey<MedicalHistory>(m => m.AppointmentId)
+                .OnDelete(DeleteBehavior.SetNull);//making the 1:1 relationship
+
+
             base.OnModelCreating(modelBuilder);
 
             //Table Per Type

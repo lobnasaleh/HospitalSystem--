@@ -23,13 +23,15 @@ public class Appointment
     public DateTime AppointmentDateTime { get; set; }
 
     public string Status { get; set; }
-
-   // public virtual MedicalHistory MedicalHistory { get; set; }
-
+  
+    //Navigation Properties
     public virtual Patient? Patient { get; set; }
 
     public virtual Staff? Staff { get; set; }
 
     public virtual Department? Department { get; set; }
+
+    public virtual MedicalHistory? MedicalHistory { get; set; }
+
 
 }

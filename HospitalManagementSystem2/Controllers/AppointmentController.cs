@@ -6,9 +6,48 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace HMS.web.Controllers
 {
-    /*public class AppointmentController : Controller
+    public class AppointmentController : Controller
     {
-        IAppointmentRepository appointmentRepository;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /*    IAppointmentRepository appointmentRepository;
         IStaffScheduleRepository scheduleRepository;
         IDepartmentRepository departmentRepository;
 
@@ -113,7 +152,7 @@ namespace HMS.web.Controllers
             appointmentRepository.Save();
             List<Staff> staff = appointmentRepository.GetAllStaff(DepartmentId);
             return View("ChooseDoctor", staff);
-        }
+        }*/
 
-    }*/
+    }
 }

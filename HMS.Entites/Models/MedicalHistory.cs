@@ -14,24 +14,21 @@ public class MedicalHistory
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
-    [ForeignKey(nameof(Patient))]
-    public string PatientId { get; set; }
-    [ForeignKey(nameof(Staff))]
-    public string StaffId { get; set; }
 
+    [ForeignKey(nameof(Appointment))]
+    public int? AppointmentId { get; set; }
+
+    [MaxLength(500, ErrorMessage = "Diagnosis can not exceed 500 characters")]
+    [Required(ErrorMessage = "Diagnosis is required.")]
     public string Diagnosis { get; set; }
-
+    [MaxLength(1000,ErrorMessage = "Treatment plan cannot exceed 1000 characters.")]
+    [Required(ErrorMessage = "Treatment plan is required.")]
     public string TreatmentPlan { get; set; }
-
+    [MaxLength(500,ErrorMessage = "Prescription can not exceed 500 characters")]
     public string Prescription { get; set; }
 
-    public DateOnly VisitedDate { get; set; }
+    //Navigation Property 
+    public virtual Appointment? Appointment { get; set; }
 
-   // public int AppointmentId { get; set; }
 
-   // public virtual ICollection<Appointment> Appointments { get; set; }
-
-    public virtual Staff? Staff { get; set; }
-
-    public virtual Patient? Patient { get; set; }
 }
