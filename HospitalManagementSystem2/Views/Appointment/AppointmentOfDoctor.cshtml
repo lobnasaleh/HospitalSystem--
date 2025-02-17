@@ -38,18 +38,16 @@
                     <td>@Enum.GetName(typeof(AppointmentStatus), @item.Status)</td>
                    
 
-                    <i class="bi bi-window-plus"></i>
+                  
 
-                    @if (Enum.GetName(typeof(AppointmentStatus), @item.Status)==AppointmentStatus.COMPLETED.ToString()   )
+                    @if (item.Status==AppointmentStatus.COMPLETED)
                     {
                         <td> <a asp-action="Add" asp-controller="MedicalHistories" asp-route-AppointmentId="@item.Id" class="btn btn-success">Add Medical History <i class="bi bi-window-plus"></i></a></td>
-                        <td> <a asp-action="Update" asp-controller="MedicalHistories" asp-route-AppointmentId="@item.Id" class="btn btn-primary">Update Medical History <i class="bi bi-pencil-square"></i></a></td>
-
+                      
                     }
                     else{
-                    <td> <a class="disabled" asp-action="Add" asp-controller="MedicalHistories" asp-route-AppointmentId="@item.Id" class="btn btn-success">Add Medical History <i class="bi bi-window-plus"></i></a></td>
-                    <td> <a class="disabled" asp-action="Update" asp-controller="MedicalHistories" asp-route-AppointmentId="@item.Id" class="btn btn-primary">Update Medical History <i class="bi bi-pencil-square"></i></a></td>
-
+                        <td> <a asp-action="Add" asp-controller="MedicalHistories" asp-route-AppointmentId="@item.Id" class="btn btn-success disabled-link ">Add Medical History <i class="bi bi-window-plus"></i></a></td>
+                      
                     }
                     @* momkn a3emelhom law else dsabled *@
 
@@ -61,3 +59,9 @@
 
     </table>
 </div>
+<style>
+    .disabled-link {
+        pointer-events: none;
+        opacity: 0.6;
+    }
+</style>

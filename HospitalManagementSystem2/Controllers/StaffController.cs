@@ -171,7 +171,6 @@ namespace HMS.web.Controllers
 
         }
 
-
         [HttpGet]
         public async Task<IActionResult> ConfirmDelete(string id)
         {
@@ -183,7 +182,6 @@ namespace HMS.web.Controllers
             return View("Delete", staff);
 
         }
-
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -218,8 +216,30 @@ namespace HMS.web.Controllers
             return RedirectToAction("Index");
         }
 
+        [HttpGet]
+        public IActionResult Search(string id) {
 
+            return View();
+        }
 
+        
+        public async Task<IActionResult>SearchStaff(string searchQuery)
+        {
+
+            if (string.IsNullOrEmpty(searchQuery)) { return NotFound(); }
+            else { searchQuery = searchQuery.ToLower(); }
+           
+            var st=await _unitOfWork.StaffRepository.getAllAsync(s=> !s.IsDeleted && s.Position==Position.DOCTOR &&
+           (s.Qualification.Contains(searchQuery)     || s.Department.Name.Contains(searchQuery)  || s.FullName.Contains(searchQuery)         )
+           , new[] {"Department"}
+           );
+            if (st == null || !st.Any()) {
+
+                return Json(new { success = false, message = "No matching doctors found." });
+
+            }
+            return PartialView("_SearchStaff", st);
+        }
 
 
 

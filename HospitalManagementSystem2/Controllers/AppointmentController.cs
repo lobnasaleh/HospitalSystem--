@@ -36,7 +36,18 @@ namespace HMS.web.Controllers
 
          return View("AppointmentOfDoctor",appointments);
         }
-      
+
+      /*  public async Task<IActionResult> AvailableAppointmentsOfDoc(string Staffid)//patient howa ely byshoof
+        {
+
+        }*/
+
+
+       
+        //get AppointmentById -->patient
+        //AppointmentofPatient-->patient
+
+
 
 
 

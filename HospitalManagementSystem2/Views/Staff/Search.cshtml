@@ -1,0 +1,38 @@
+﻿
+
+<div class="container">
+
+    <div class="input-group mb-3 mt-5">
+        <span class="input-group-text">
+            <i class="bi bi-search"></i>
+        </span>
+<input type="text" id="doctorSearch" placeholder="Search by name, qualification, or department..." class="form-control" />
+</div>
+<div id="doctorResults"></div>
+<div id="errorMessage" style="color: red;"></div>
+</div>
+
+<script src="~/lib/jquery/dist/jquery.js"></script>
+<script>
+
+    $(document).ready(function () {
+        $("#doctorSearch").on("keyup", function () {
+            var searchQuery = $(this).val();
+
+            $.ajax({
+                url: "/Staff/SearchStaff",
+                type: "GET",
+                data: { searchQuery: searchQuery },
+                success: function (data) {
+                    if (data.success === false) {
+                        $("#errorMessage").text(data.message); // Show error message
+                        $("#doctorResults").html(""); // Clear previous results
+                    } else {
+                        $("#errorMessage").text(""); // Clear error message
+                        $("#doctorResults").html(data); // Load the partial view
+                    }
+                }
+            });
+        });
+    });
+</script>

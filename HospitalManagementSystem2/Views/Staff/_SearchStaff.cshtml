@@ -1,0 +1,53 @@
+﻿@model IEnumerable<HMS.Entities.Models.Staff>
+
+@if (Model.Any())
+{
+<div class="container p-4">
+
+    <div class="row pb-2">
+
+        <div class="col">
+            <h1 class="text-white">Staff List</h1>
+
+
+        </div>
+
+    </div>
+
+
+    <table class="table table-bordered table-hover table-info">
+
+        <thead>
+
+        <th>Full Name</th>
+        <th>Qualification</th>
+        <th>Department</th>
+
+
+        </thead>
+        <tbody>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+
+
+                    <td>@item.FullName</td>
+                    <td>@item.Qualification</td>
+                    <td>@item.Department.Name</td>
+
+                        <td> <a asp-action="" asp-controller="Appointment" asp-route-Staffid="@item.Id" class="btn btn-success">Check Available Appointments <i class="bi bi-window-plus"></i></a></td>
+
+
+                    </tr>
+
+            }
+        </tbody>
+
+    </table>
+</div>
+}
+else
+{
+    <p class="text-white">No doctors found.</p>
+}

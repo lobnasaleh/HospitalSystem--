@@ -16,7 +16,7 @@ public class MedicalHistory
     public int Id { get; set; }
 
     [ForeignKey(nameof(Appointment))]
-    public int? AppointmentId { get; set; }
+    public int AppointmentId { get; set; }
 
     [MaxLength(500, ErrorMessage = "Diagnosis can not exceed 500 characters")]
     [Required(ErrorMessage = "Diagnosis is required.")]

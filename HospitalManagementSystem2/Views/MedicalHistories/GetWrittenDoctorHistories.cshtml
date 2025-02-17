@@ -2,7 +2,7 @@
 
 @if (TempData["Error"] != null)
 {
-    <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+    <div class="alert alert-danger">@TempData["Error"]</div>
 }
 
 <div class="container p-4">
@@ -14,7 +14,9 @@
 
 
         </div>
-       
+        <div class="col d-flex justify-content-end pt-1">
+            <a asp-action="AppointmentOfDoc" asp-controller="Appointment" class="btn btn-outline-primary" >Back</a>
+        </div>
 
     </div>
 
@@ -42,7 +44,7 @@
                     <td>@item.Diagnosis</td>
                     <td>@item.Prescription</td>
                     <td>@item.TreatmentPlan</td>
-                  
+
 
                     <td> <a asp-action="Update" asp-controller="MedicalHistories" asp-route-id="@item.Id" class="btn btn-success">Update <i class="bi bi-pencil-square"></i></a></td>
                   
@@ -53,7 +55,6 @@
             }
 
         </tbody>
-        <a asp-action="AppointmentOfDoc" asp-controller="Appointment" class="btn btn-primary w-100">Back</a>
-
+       
     </table>
 </div>
