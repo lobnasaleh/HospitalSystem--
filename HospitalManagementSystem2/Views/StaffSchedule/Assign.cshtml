@@ -1,46 +1,76 @@
-﻿@model HMS.Entities.Models.StaffSchedule
+﻿@model HMS.Entites.ViewModel.AssignVM
 
 @{
     ViewData["Title"] = "Assign";
 }
 
-@{
-    SelectList Staff = new SelectList(ViewBag.Staff, "Id", "User.Name");
-    SelectList Schedules = new SelectList(ViewBag.Schedules, "Id", "DisplayText");
-  
-}
-<h1 class="text-center" style="color:rgb(24 187 155)">Assign Staff</h1>
-
-@if (TempData["SuccessMessage"] != null)
+@if (TempData["Error"] != null)
 {
-    <div class="alert alert-success">
-        @TempData["SuccessMessage"]
-    </div>
+    <div class="alert alert-danger">@TempData["Error"]</div>
+
 }
-<form method="post" asp-action="SaveAssign" asp-controller="StaffSchedule">
-    
-    <div>
-    <label asp-for="StaffId"></label>
-        <select class="form form-control" asp-for="StaffId" asp-items="Staff">
-            <option value="0">Select a Staff Memeber </option>
-        </select>
-        <span class="text-danger" asp-validation-for="StaffId"></span>
+
+@{
+    SelectList Staffoptions = new SelectList(Model.Staff,"Id","FullName");
+    SelectList Scheduleoptions = new SelectList(Model.Schedules.Select(s => new
+    {
+        Id = s.Id,
+        DisplayText = s.Date.ToString("yyyy-MM-dd") + " | " + s.AvailableFrom.ToString(@"hh\:mm tt") + " - " + s.AvailableTo.ToString(@"hh\:mm tt")
+    }), "Id", "DisplayText");
+
+}
+<form asp-action="Assign" asp-controller="StaffSchedule">
+
+
+    <div class="container border-3 p-3 mb-3">
+        <h1 class=" text-white">Assign Schedule to Staff Member</h1>
+        <hr />
+        <div class="row">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+           
+            <div class="col-2">
+                <label asp-for="StaffId" class="control-label text-white"></label>
+
+            </div>
+            <div class="col-10 pb-3">
+                <select asp-for="StaffId" asp-items="Staffoptions" class="form-control pt-2">
+                    <option disabled selected>--Please Choose a Staff Member--</option>
+                </select>
+                <span asp-validation-for="StaffId" class="text-danger"></span>
+            </div>
+
+            <div class="col-2">
+                <label asp-for="ScheduleId" class="control-label text-white"></label>
+
+            </div>
+            <div class="col-10 pb-3">
+                <select asp-for="ScheduleId" asp-items="Scheduleoptions" class="form-control pt-2">
+                    <option disabled selected>--Please Choose a Schedule--</option>
+                </select>
+                <span asp-validation-for="ScheduleId" class="text-danger"></span>
+            </div>
+
+
+            <div class="col-5 offset-2">
+                <input type="submit" value="Create" class="btn btn-success w-100" />
+            </div>
+            <div class="col-5 ">
+                <a asp-action="" asp-controller="" class="btn btn-primary w-100">Back</a>
+            </div>
+
+        </div>
+
+
     </div>
 
-    <div>
-        <label asp-for="ScheduleId"></label>
-        <select class="form form-control" asp-for="ScheduleId" asp-items="Schedules">
-            <option value="0">Select Schedule</option>
 
-        </select>
-        <span class="text-danger" asp-validation-for="ScheduleId"></span>
-    </div>
 
-    <div class="d-flex justify-content-center">
-        <button class="btn btn-primary mt-3">Assign Schedule</button>
-    </div>
-  
+
 
 </form>
-<hr />
-<hr />
+
+@* @{
+    SelectList Staff = new SelectList(ViewBag.Staff, "Id", "User.Name");
+    SelectList Schedules = new SelectList(ViewBag.Schedules, "Id", "DisplayText");
+
+} *@

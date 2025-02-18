@@ -21,6 +21,8 @@ namespace HMS.web.Helpers
             .ForMember(dest => dest.Department, opt => opt.Ignore())  // Ignore Department
             .ForMember(dest => dest.MedicalHistory, opt => opt.Ignore());  // Ignore MedicalHistory
 
+            CreateMap<AssignVM, StaffSchedule>();
+
 
             CreateMap<RegisterStaffRequest, RegisterStaffRequestVM>().ReverseMap();
             CreateMap<RegisterRequest, RegisterRequestVM>().ReverseMap();
