@@ -37,14 +37,14 @@ namespace HMS.web
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
             builder.Services.AddAutoMapper(typeof(MappingProfile));//auto mapper
 
-            // Debug AutoMapper configuration
+        /*    // Debug AutoMapper configuration
             var config = new MapperConfiguration(cfg =>
             {
                 cfg.AddProfile<MappingProfile>(); 
             });
 
             // Validate AutoMapper configuration
-            config.AssertConfigurationIsValid();
+            config.AssertConfigurationIsValid();*/
 
             builder.Services.AddScoped<IAuthService,AuthService>();
         

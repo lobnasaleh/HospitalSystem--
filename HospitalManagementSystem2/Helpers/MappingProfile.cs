@@ -13,18 +13,14 @@ namespace HMS.web.Helpers
         {
              CreateMap<Department, DepartmentViewModel>().ReverseMap();
             CreateMap<Schedule, ScheduleVM>().ReverseMap();
-            /* CreateMap<Appointment, MedicalHistoryVM>()
-                 .ForMember(dest => dest.FullName, opt => opt.MapFrom(src => src.Patient.FullName))
-                 .ForMember(dest => dest.AppointmentId, opt => opt.MapFrom(src => src.Id))
-                 .ReverseMap()
-                .ForMember(dest => dest.Patient.FullName, opt => opt.MapFrom(src => src.FullName))
-             //   .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.AppointmentId));
- */
 
+            CreateMap<BookAppointmentVM, Appointment>()
+            .ForMember(dest => dest.Status, opt => opt.Ignore())  // 
+            .ForMember(dest => dest.Patient, opt => opt.Ignore())  // Ignore Patient
+            .ForMember(dest => dest.Staff, opt => opt.Ignore())  // Ignore Staff
+            .ForMember(dest => dest.Department, opt => opt.Ignore())  // Ignore Department
+            .ForMember(dest => dest.MedicalHistory, opt => opt.Ignore());  // Ignore MedicalHistory
 
-
-           // CreateMap<MedicalHistoryVM, MedicalHistory>();
-                
 
             CreateMap<RegisterStaffRequest, RegisterStaffRequestVM>().ReverseMap();
             CreateMap<RegisterRequest, RegisterRequestVM>().ReverseMap();

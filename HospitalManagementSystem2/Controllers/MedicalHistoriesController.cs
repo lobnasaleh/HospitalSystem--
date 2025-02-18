@@ -146,7 +146,7 @@ namespace HMS.web.Controllers
 
             return View(medicalhistoryfromreq);//3yza ata2ked mazboota wala eh
         }
-
+        //getMedicalHistoroesByPatient
 
     }
 

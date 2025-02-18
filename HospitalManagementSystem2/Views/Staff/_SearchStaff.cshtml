@@ -36,7 +36,7 @@
                     <td>@item.Qualification</td>
                     <td>@item.Department.Name</td>
 
-                        <td> <a asp-action="" asp-controller="Appointment" asp-route-Staffid="@item.Id" class="btn btn-success">Check Available Appointments <i class="bi bi-window-plus"></i></a></td>
+                        <td> <a asp-action="getAvaialbleAppointmentsOfDoctor" asp-controller="Appointment" asp-route-DepartmentId="@item.DepartmentId" asp-route-StaffId="@item.Id" class="btn btn-success">Check Available Appointments <i class="bi bi-window-plus"></i></a></td>
 
 
                     </tr>

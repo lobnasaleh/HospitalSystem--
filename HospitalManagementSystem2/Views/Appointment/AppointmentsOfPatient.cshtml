@@ -1,0 +1,71 @@
+﻿@using HMS.Entites.Enums
+@model IEnumerable<HMS.Entities.Models.Appointment>
+
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+
+<div class="container p-4">
+
+    <div class="row pb-2">
+
+        <div class="col">
+            <h1 class="text-white">Hi, This is your Appointment List</h1>
+        </div>
+
+
+    </div>
+
+    <table class="table table-bordered table-hover table-info">
+
+        <thead>
+
+        <th>Doctor Name</th>
+        <th>Department Name</th>
+        <th>Appointment Date</th>
+        <th>Appointment Time</th>
+        <th>Appointment Status</th>
+
+
+        </thead>
+        <tbody>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+
+
+                    <td>@item.Staff.FullName</td>
+                    <td>@item.Department.Name</td>
+                    <td>@item.AppointmentDateTime.ToString("d")</td>
+                    <td>@item.AppointmentDateTime.ToString("HH:mm")</td>
+                    <td>@Enum.GetName(typeof(AppointmentStatus), @item.Status)</td>
+
+
+                    @if (item.Status == AppointmentStatus.UPCOMING)
+                    {
+
+                        <td> <a asp-action="ConfirmDelete" asp-controller="Appointment" asp-route-id="@item.Id" class="btn btn-danger">Cancel<i class="bi bi-trash"></i></a></td>
+
+                    }
+                    else
+                    {
+                        <td> <a asp-action="ConfirmDelete" asp-controller="Appointment" asp-route-id="@item.Id" class="btn btn-danger disabled-link">Cancel<i class="bi bi-trash"></i></a></td>
+
+                    }
+
+                </tr>
+            }
+        </tbody>
+
+    </table>
+</div>
+
+<style>
+    .disabled-link {
+        pointer-events: none;
+        opacity: 0.6;
+    }
+</style>

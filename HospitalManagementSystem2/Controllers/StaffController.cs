@@ -217,7 +217,7 @@ namespace HMS.web.Controllers
         }
 
         [HttpGet]
-        public IActionResult Search(string id) {
+        public IActionResult Search() {
 
             return View();
         }
