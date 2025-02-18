@@ -24,7 +24,12 @@ namespace HMS.web.Controllers
             this.mapper = mapper;
         }
 
-
+        //admin
+        public async Task<IActionResult> AllAppointments()
+        {
+           var a= await unitOfWork.AppointmentRepository.getAllAsync(null, new[] { "Department", "Patient" ,"Staff"});
+            return View(a);
+        }
 
         public async Task<IActionResult> AppointmentOfDoc() { //to show it for doctor writing histories 
             //get the id of the logged in staff 

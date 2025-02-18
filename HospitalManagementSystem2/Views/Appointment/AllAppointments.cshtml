@@ -6,9 +6,9 @@
     <div class="row pb-2">
 
         <div class="col">
-            <h1 class="text-white">Hi Doctor, This is your Appointment List</h1>
+            <h1 class="text-white">Hi Admin, This is The Appointment List</h1>
         </div>
-       
+
 
     </div>
 
@@ -17,6 +17,7 @@
         <thead>
 
         <th>Patient Name</th>
+        <th>Doctor Name</th>
         <th>Department Name</th>
         <th>Appointment Date</th>
         <th>Appointment Time</th>
@@ -29,39 +30,16 @@
             @foreach (var item in Model)
             {
                 <tr>
-
-
                     <td>@item.Patient.FullName</td>
+                    <td>@item.Staff.FullName</td>
                     <td>@item.Department.Name</td>
                     <td>@item.AppointmentDateTime.ToString("d")</td>
                     <td>@item.AppointmentDateTime.ToString("HH:mm")</td>
                     <td>@Enum.GetName(typeof(AppointmentStatus), @item.Status)</td>
-                   
 
-                  
-
-                    @if (item.Status==AppointmentStatus.COMPLETED)
-                    {
-                        <td> <a asp-action="Add" asp-controller="MedicalHistories" asp-route-AppointmentId="@item.Id" class="btn btn-success">Add Medical History <i class="bi bi-window-plus"></i></a></td>
-                      
-                    }
-                    else{
-                        <td> <a asp-action="Add" asp-controller="MedicalHistories" asp-route-AppointmentId="@item.Id" class="btn btn-success disabled-link ">Add Medical History <i class="bi bi-window-plus"></i></a></td>
-                      
-                    }
-                    @* momkn a3emelhom law else dsabled *@
-
-                 
-                   
                 </tr>
             }
         </tbody>
 
     </table>
 </div>
-<style>
-    .disabled-link {
-        pointer-events: none;
-        opacity: 0.6;
-    }
-</style>
