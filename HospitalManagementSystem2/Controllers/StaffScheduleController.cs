@@ -24,7 +24,13 @@ namespace HMS.web.Controllers
         [HttpGet]
         public async Task<IActionResult> getAssignedStaff()
         {
-          var ass=  await unitOfWork.StaffScheduleRepository.getAllAsync(ss => !ss.IsDeleted, new[] {"Staff.Department","Schedule"} );
+            var currentDate = DateTime.Now.Date; // If ss.Date is DateTime
+            var currentTime = TimeOnly.FromDateTime(DateTime.Now);
+
+            var ass=  await unitOfWork.StaffScheduleRepository.getAllAsync(ss => !ss.IsDeleted
+           && (ss.Schedule.Date > currentDate || (ss.Schedule.Date == currentDate && ss.Schedule.AvailableFrom > currentTime))//el hagat ely ye2dar ye3mlha deassign lazem tkoon 
+
+          , new[] {"Staff.Department","Schedule"} );
 
             return View (ass);
         }
@@ -33,10 +39,16 @@ namespace HMS.web.Controllers
         [HttpGet]
         public async Task< IActionResult> Assign()
         {
+            
+            var currentDate = DateTime.Now.Date; // If ss.Date is DateTime
+            var currentTime = TimeOnly.FromDateTime(DateTime.Now);
+
             AssignVM assignVM = new AssignVM()
             {
                 Staff= await unitOfWork.StaffRepository.getAllAsync(s=>!s.IsDeleted),
-                Schedules=await unitOfWork.ScheduleRepository.getAllAsync(ss=>!ss.IsDeleted)
+                Schedules=await unitOfWork.ScheduleRepository.getAllAsync(ss => !ss.IsDeleted &&
+                (ss.Date > currentDate ||
+                (ss.Date == currentDate && ss.AvailableFrom > currentTime)))
             };
 
             return View(assignVM);
@@ -121,14 +133,15 @@ namespace HMS.web.Controllers
              var asp=   await unitOfWork.AppointmentRepository.
                 getAllAsync(a => a.Status==AppointmentStatus.CANCELLED && a.StaffId == StaffId);
 
-            var sched = await unitOfWork.ScheduleRepository.getAllAsync(s => s.Id == ScheduleId && !s.IsDeleted);
+            var sched = await unitOfWork.ScheduleRepository.getAllAsync(s => s.Id == ScheduleId && !s.IsDeleted
+          );
 
             if (!sched.Any()||! asp.Any()) {
                 return NotFound();
             
             }
 
-            bool hasConflict = asp.Any(app => sched.Any(s => app.AppointmentDateTime.TimeOfDay == s.AvailableFrom.ToTimeSpan()));
+            bool hasConflict = asp.Any(app => sched.Any(s => app.Status==AppointmentStatus.UPCOMING && app.AppointmentDateTime.TimeOfDay == s.AvailableFrom.ToTimeSpan()));
 
             if (hasConflict) {
                 TempData["Error"] = "Can not Deassign a Schedule that is an Appointment";

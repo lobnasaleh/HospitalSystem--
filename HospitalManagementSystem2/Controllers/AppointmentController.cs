@@ -50,7 +50,7 @@ namespace HMS.web.Controllers
             ViewBag.DepartmentId = DepartmentId;
 
             var appointments = await unitOfWork.AppointmentRepository
-               .getAllAsync(a => a.Status!=AppointmentStatus.CANCELLED && a.StaffId == StaffId, new[] { "Department" });
+               .getAllAsync(a => a.Status!=AppointmentStatus.CANCELLED && a.AppointmentDateTime> DateTime.Now && a.StaffId == StaffId, new[] { "Department" });
 
             var staffSchedules = await unitOfWork.StaffScheduleRepository.getAllAsync(ss => !ss.IsDeleted &&!ss.Schedule.IsDeleted && !ss.Staff.IsDeleted && ss.StaffId == StaffId, new[] { "Schedule","Staff" });
 
@@ -129,7 +129,7 @@ namespace HMS.web.Controllers
             {
                 return NotFound();
             }
-            if ((a.AppointmentDateTime - DateTime.UtcNow).TotalHours < 24)
+            if ((a.AppointmentDateTime - DateTime.Now).TotalHours < 24)
             {
                 TempData["Error"] = "You can only cancel an appointment at least 24 hours in advance.";
                 return RedirectToAction("AppointmentsOfPatient");

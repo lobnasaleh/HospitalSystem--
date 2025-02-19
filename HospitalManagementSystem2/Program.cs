@@ -6,6 +6,7 @@ using HMS.DataAccess.Services.AuthService;
 using HMS.Entites.Interfaces;
 using HMS.Entites.Models;
 using HMS.Entities.Interfaces;
+using HMS.Utilities.BackgroundServices;
 using HMS.web.Helpers;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
@@ -35,6 +36,7 @@ namespace HMS.web
             .AddEntityFrameworkStores<HospitalContext>();
             //.AddDefaultTokenProviders();
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+            builder.Services.AddHostedService<AppointmentStatusUpdater>();
             builder.Services.AddAutoMapper(typeof(MappingProfile));//auto mapper
 
 /*            // Debug AutoMapper configuration
