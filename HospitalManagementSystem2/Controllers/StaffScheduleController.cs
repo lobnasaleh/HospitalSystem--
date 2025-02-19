@@ -56,7 +56,19 @@ namespace HMS.web.Controllers
                 return View(ass);
             }
 
-            StaffSchedule sc=await unitOfWork.StaffScheduleRepository.getAsync(s=>s.StaffId==assignVM.StaffId && s.ScheduleId==assignVM.ScheduleId
+            //check if this schedule was already assigned to the staff member but marked deleted -->mark it not deleted
+
+            StaffSchedule foundbutedeleted = await unitOfWork.StaffScheduleRepository.getAsync(ss => ss.IsDeleted && ss.StaffId == assignVM.StaffId && ss.ScheduleId == assignVM.ScheduleId);
+            if (foundbutedeleted != null)
+            {
+
+                foundbutedeleted.IsDeleted = false;
+                unitOfWork.StaffScheduleRepository.Update(foundbutedeleted);
+                await unitOfWork.completeAsync();
+
+                return RedirectToAction("getAssignedStaff");
+            }
+            StaffSchedule sc=await unitOfWork.StaffScheduleRepository.getAsync(s=>!s.IsDeleted && s.StaffId==assignVM.StaffId && s.ScheduleId==assignVM.ScheduleId
             && !s.Staff.IsDeleted && !s.Schedule.IsDeleted, true, new[] {"Schedule","Staff"});
 
             if (sc != null) {
