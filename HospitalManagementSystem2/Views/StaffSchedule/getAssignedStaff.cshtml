@@ -1,0 +1,62 @@
+﻿@model IEnumerable<HMS.Entities.Models.StaffSchedule>
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+
+<div class="container p-4">
+
+    <div class="row pb-2">
+
+        <div class="col">
+            <h1 class="text-white">Staff Schedules</h1>
+
+
+        </div>
+        <div class="col d-flex justify-content-end pt-1">
+            <a asp-controller="StaffSchedule" asp-action="Assign" class="btn btn-outline-primary">Assign Schedule to a Staff Member <i class="bi bi-window-plus"></i></a>
+        </div>
+
+    </div>
+
+    <table class="table table-bordered table-hover table-info">
+
+        <thead>
+
+        <th>Full Name</th>
+        <th>Position</th>
+        <th>Qualification</th>
+        <th>Department</th>
+        <th>Assigned Schedule</th>
+
+
+        </thead>
+        <tbody>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+
+
+                    <td>@item.Staff.FullName</td>
+                    <td>@item.Staff.Position</td>
+                    <td>@item.Staff.Qualification</td>
+                    <td>@item.Staff.Department.Name</td>
+                    <td>
+                        @item.Schedule.Date.ToString("yyyy-MM-dd") |
+                        @item.Schedule.AvailableFrom.ToString(@"HH:mm") -
+                        @item.Schedule.AvailableTo.ToString(@"HH:mm")
+                    </td>
+
+                    <td> <a asp-action="ConfirmDeAssign" asp-controller="StaffSchedule" asp-route-StaffId="@item.StaffId" asp-route-ScheduleId="@item.ScheduleId" class="btn btn-danger">DeAssign<i class="bi bi-trash"></i></a></td>
+
+                </tr>
+
+
+
+            }
+        </tbody>
+
+    </table>
+</div>
+

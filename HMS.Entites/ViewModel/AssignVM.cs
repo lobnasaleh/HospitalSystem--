@@ -16,7 +16,6 @@ namespace HMS.Entites.ViewModel
         [Required]
         public string StaffId { get; set; }
 
-
         public IEnumerable<Schedule> Schedules { get; set; }=new List<Schedule>();
 
         public IEnumerable<Staff> Staff { get; set; }=new List<Staff>();

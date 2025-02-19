@@ -17,7 +17,7 @@ public class StaffSchedule
     [Required]
     //[UniqueStaffSchedule]
     public string StaffId { get; set; }
-    public bool IsDeleted { get; set; }
+    public bool IsDeleted { get; set; }=false;
 
     public virtual Schedule? Schedule { get; set; }
 

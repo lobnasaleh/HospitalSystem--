@@ -106,7 +106,9 @@
         </header>
         <!-- end header section -->
         @RenderBody()
-       
+        <script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+        @await RenderSectionAsync("Scripts", required: false)
         <!-- footer section -->
         <div class="d-flex flex-column min-vh-100"><!---->
             <footer id="contact" class="footer mt-auto p-4 footer_section">

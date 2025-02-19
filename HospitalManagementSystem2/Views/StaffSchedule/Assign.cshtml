@@ -45,7 +45,7 @@
             </div>
             <div class="col-10 pb-3">
                 <select asp-for="ScheduleId" asp-items="Scheduleoptions" class="form-control pt-2">
-                    <option disabled selected>--Please Choose a Schedule--</option>
+                    <option   disabled selected>--Please Choose a Schedule--</option>
                 </select>
                 <span asp-validation-for="ScheduleId" class="text-danger"></span>
             </div>
@@ -74,3 +74,8 @@
     SelectList Schedules = new SelectList(ViewBag.Schedules, "Id", "DisplayText");
 
 } *@
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

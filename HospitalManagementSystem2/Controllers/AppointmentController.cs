@@ -52,8 +52,12 @@ namespace HMS.web.Controllers
             var appointments = await unitOfWork.AppointmentRepository
                .getAllAsync(a => a.Status!=AppointmentStatus.CANCELLED && a.StaffId == StaffId, new[] { "Department" });
 
-            var staffSchedules = await unitOfWork.StaffScheduleRepository.getAllAsync(ss => !ss.Schedule.IsDeleted && ss.StaffId == StaffId, new[] { "Schedule" });
-                
+            var staffSchedules = await unitOfWork.StaffScheduleRepository.getAllAsync(ss => !ss.IsDeleted &&!ss.Schedule.IsDeleted && !ss.Staff.IsDeleted && ss.StaffId == StaffId, new[] { "Schedule","Staff" });
+
+            if (!staffSchedules.Any()) {
+                TempData["Error"] = "No Available Appointments";
+                return RedirectToAction("Search","Staff");
+            }
 
             var availableSchedules = staffSchedules
             .Where(ss => !appointments.Any(appointment =>
