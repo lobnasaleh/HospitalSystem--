@@ -5,6 +5,7 @@ using HMS.Entites.Models;
 using HMS.Entites.ViewModel;
 using HMS.Entities.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -135,7 +136,7 @@ namespace HMS.DataAccess.Services.AuthService
             };
         }
 
-        public async Task<AuthResponse>UpdateStaffProfile(string id, RegisterStaffRequestVM registerRequest)
+        public async Task<AuthResponse>UpdateStaffProfile(string id, UpateStaffRequest UpdateRequest)
         {
             AuthResponse auth = new AuthResponse();
             //registerRequest.
@@ -146,15 +147,12 @@ namespace HMS.DataAccess.Services.AuthService
                 auth.IsSuccess = false;
                    return auth; 
             }
-            //RegisterStaffRequestVM-->Staff
-            st.Address = registerRequest.Address;
-            st.FullName = registerRequest.FullName;
-            st.UserName = registerRequest.UserName;
-            st.PasswordHash = registerRequest.PasswordHash;
-            st.Position = (Position)registerRequest.Position;
-            st.Email = registerRequest.Email;
-            st.DepartmentId = registerRequest.DepartmentId;
-            st.Qualification = registerRequest.Qualification;
+            //updateStaffRequestVM-->Staff
+            st.Address = UpdateRequest.Address;
+            st.FullName = UpdateRequest.FullName;
+            st.Position = (Position)UpdateRequest.Position;
+            st.DepartmentId = UpdateRequest.DepartmentId;
+            st.Qualification = UpdateRequest.Qualification;
 
             var result=  await _userManager.UpdateAsync(st);
 
@@ -171,6 +169,41 @@ namespace HMS.DataAccess.Services.AuthService
             return auth;
         }
 
+
+        public async Task<AuthResponse> UpdateProfile(string id, UpdateRequest UpdateRequest)
+        {
+            AuthResponse auth = new AuthResponse();
+            //registerRequest.
+            Patient p = await _userManager.FindByIdAsync(id) as Patient;
+            if (p == null)
+            {
+                auth.Message = "No Patient With This ID is found";
+                auth.IsSuccess = false;
+                return auth;
+            }
+            //updateRequestVM-->Patient
+            p.Address = UpdateRequest.Address;
+            p.FullName = UpdateRequest.FullName;
+            p.InsuranceProvider = UpdateRequest.InsuranceProvider;
+            p.InsuranceNumber = UpdateRequest.InsuranceNumber;
+            p.DOB = UpdateRequest.DOB;
+            p.EmergencyContact = UpdateRequest.EmergencyContact;
+
+            var result = await _userManager.UpdateAsync(p);
+
+            if (result.Succeeded)
+            {
+                auth.Message = "Staff Info Updated Successfully";
+                auth.IsSuccess = true;
+            }
+            else
+            {    auth.Errors=result.Errors.ToList();
+                
+                auth.Message = "Failed to Update Staff Info";
+                auth.IsSuccess = false;
+            }
+            return auth;
+        }
 
         public async Task<AuthResponse> RegisterStaff(RegisterStaffRequest registerRequest)
         {
@@ -270,6 +303,23 @@ namespace HMS.DataAccess.Services.AuthService
             }
 
             return mytoken;
+        }
+
+        public async Task<AuthResponse> AddRole(string name)
+        {
+            IdentityRole role=new IdentityRole();
+            role.Name = name;
+            var res=await roleManager.CreateAsync(role);
+            if (res.Succeeded) { 
+            return new AuthResponse() { IsSuccess = true };
+            }
+            return new AuthResponse() { IsSuccess = false };
+        }
+
+        public async Task<List<IdentityRole>> GetRoles()
+        {
+              var res= await roleManager.Roles.ToListAsync();
+            return res;
         }
     }
 }

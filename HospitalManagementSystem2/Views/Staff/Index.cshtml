@@ -1,5 +1,9 @@
 ﻿@model IEnumerable<HMS.Entities.Models.Staff>
 
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
 
 <div class="container p-4">
 
@@ -42,7 +46,7 @@
                     <td>@item.Qualification</td>
                     <td>@item.Department.Name</td>
                   
-
+                    <!--need to adjust logged userid-->
                     <td> <a asp-action="Update" asp-controller="Staff" asp-route-id="@item.Id" class="btn btn-success">Update <i class="bi bi-pencil-square"></i></a></td>
                     <td> <a asp-action="ConfirmDelete" asp-controller="Staff" asp-route-id="@item.Id" class="btn btn-danger">Delete<i class="bi bi-trash"></i></a></td>
 

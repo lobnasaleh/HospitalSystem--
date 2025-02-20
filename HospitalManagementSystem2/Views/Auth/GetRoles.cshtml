@@ -1,0 +1,51 @@
+﻿@model IEnumerable<Microsoft.AspNetCore.Identity.IdentityRole>
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+
+<div class="container p-4">
+
+    <div class="row pb-2">
+
+        <div class="col">
+            <h1 class="text-white">Roles List</h1>
+
+
+        </div>
+        <div class="col d-flex justify-content-end pt-1">
+            <a asp-controller="Auth" asp-action="AddRole" class="btn btn-outline-primary">Add New Role <i class="bi bi-window-plus"></i></a>
+        </div>
+
+    </div>
+
+
+    <table class="table table-bordered table-hover table-info">
+
+        <thead>
+
+        <th>Role Name</th>
+       
+        </thead>
+        <tbody>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+
+
+                    <td>@item.Name</td>
+                   
+
+                    <!--need to adjust logged userid-->
+                    <td> <a asp-action="UpdateRole" asp-controller="Auth" asp-route-id="@item.Id" class="btn btn-success">Update Role Name<i class="bi bi-pencil-square"></i></a></td>
+                    <td> <a asp-action="ConfirmDeleteRole" asp-controller="Auth" asp-route-id="@item.Id" class="btn btn-danger">Delete Role <i class="bi bi-trash"></i></a></td>
+
+                </tr>
+
+            }
+        </tbody>
+
+    </table>
+</div>

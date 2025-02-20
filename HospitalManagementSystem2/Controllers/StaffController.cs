@@ -8,6 +8,7 @@ using HMS.Entities.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Security.Claims;
 
 namespace HMS.web.Controllers
 {
@@ -92,22 +93,22 @@ namespace HMS.web.Controllers
         [HttpGet]
         public async Task<IActionResult> Update(string id)
         {
+            //getting the logged in user 
+           // string loggedinuser = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-           Staff st= await _unitOfWork.StaffRepository.getAsync(s => !s.IsDeleted && s.Id == id,false);
+
+            Staff st = await _unitOfWork.StaffRepository.getAsync(s => !s.IsDeleted && s.Id == id, false);
             if (st == null) { 
               return NotFound();
             }
 
-            RegisterStaffRequestVM staffmp = new RegisterStaffRequestVM()
+            UpateStaffRequestVM staffmp = new UpateStaffRequestVM()
             {
-                PasswordHash = st.PasswordHash,
                 FullName = st.FullName,
-                Email = st.Email,
                 Position = (int)st.Position,
                 Address = st.Address,
                 DepartmentId = st.DepartmentId,
-                Qualification = st.Qualification,
-                UserName = st.UserName
+                Qualification = st.Qualification
 
             };//from staff to staffmp
 
@@ -133,7 +134,7 @@ namespace HMS.web.Controllers
         [ValidateAntiForgeryToken]
 
         //admin or staff
-        public async Task<IActionResult> Update(string id,RegisterStaffRequestVM staffFromReq)
+        public async Task<IActionResult> Update(string id,UpateStaffRequestVM staffFromReq)//el id da kan fel get howa ehtafz beeh bdoon hiddenfield 
         {
             //to refill selects
             var depts = await _unitOfWork.DepartmentRepository.getAllAsync(d => !d.IsDeleted);
@@ -151,14 +152,19 @@ namespace HMS.web.Controllers
             if (ModelState.IsValid)
             {
 
-                Staff staff = await _unitOfWork.StaffRepository.getAsync(s => !s.IsDeleted && (s.UserName == staffFromReq.UserName), false);
-                if (staff != null)
+                //var sttt = mapper.Map<UpateStaffRequest>(staffFromReq);
+                UpateStaffRequest up=new UpateStaffRequest()
                 {
+                    Address = staffFromReq.Address,
+                    DepartmentId = staffFromReq.DepartmentId,
+                    FullName = staffFromReq.FullName,
+                    Position = staffFromReq.Position,
+                    Qualification = staffFromReq.Qualification
+                   
+                };
 
-                    ModelState.AddModelError("Email", "A staff member with this Email or Username already exists.");
-                    return View(staffFromReq);
-                }
-                var res= await _authService.UpdateStaffProfile(id, staffFromReq);
+
+                var res= await _authService.UpdateStaffProfile(id, up);
                 if (res.IsSuccess) { 
                 return RedirectToAction("Index");
 
@@ -197,9 +203,10 @@ namespace HMS.web.Controllers
             //check if Staff is not assigned to any appointments in dates greater than today's date
 
             Appointment appointment = await _unitOfWork.AppointmentRepository.getAsync(a=>a.StaffId==id && a.AppointmentDateTime >=DateTime.Today);
-            if (appointment != null) { 
-            
-                    return BadRequest("Can not delete a Staff Member having upcoming appointments");
+            if (appointment != null) {
+
+                TempData["Error"] = "Can not delete a Staff Member having upcoming appointments";
+                return RedirectToAction("Index");
 
             }
             //mark the staff and staffschedule also deleted

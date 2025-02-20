@@ -36,7 +36,7 @@ namespace HMS.web
             .AddEntityFrameworkStores<HospitalContext>();
             //.AddDefaultTokenProviders();
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-            builder.Services.AddHostedService<AppointmentStatusUpdater>();
+            builder.Services.AddHostedService<AppointmentStatusUpdater>();//for background service
             builder.Services.AddAutoMapper(typeof(MappingProfile));//auto mapper
 
 /*            // Debug AutoMapper configuration

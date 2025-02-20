@@ -1,0 +1,59 @@
+﻿@model IEnumerable<HMS.Entities.Models.MedicalHistory>
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+
+<div class="container p-4">
+
+    <div class="row pb-2">
+
+        <div class="col">
+            <h1 class="text-white">Your Medical History List</h1>
+
+
+        </div>
+        <div class="col d-flex justify-content-end pt-1">
+            <a asp-action="Index" asp-controller="Home" class="btn btn-outline-primary">Back</a>
+        </div>
+
+    </div>
+
+    <table class="table table-bordered table-hover table-info">
+
+        <thead>
+
+     
+        <th>Appointment Date</th>
+        <th>Appointment Time</th>
+        <th>Diagnosis</th>
+        <th>Prescription</th>
+        <th>TreatmentPlan</th>
+
+
+        </thead>
+        <tbody>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                   
+                    <td>@item.Appointment.AppointmentDateTime.ToString("d")</td>
+                    <td>@item.Appointment.AppointmentDateTime.ToString("HH:mm")</td>
+                    <td>@item.Diagnosis</td>
+                    <td>@item.Prescription</td>
+                    <td>@item.TreatmentPlan</td>
+
+
+                  
+                </tr>
+
+
+
+            }
+
+        </tbody>
+
+    </table>
+</div>

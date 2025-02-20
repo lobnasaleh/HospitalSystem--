@@ -29,6 +29,10 @@ namespace HMS.web.Helpers
 
             CreateMap<RegisterStaffRequest, RegisterStaffRequestVM>().ReverseMap();
             CreateMap<RegisterRequest, RegisterRequestVM>().ReverseMap();
+          //  CreateMap<UpateStaffRequest, UpateStaffRequestVM>().ReverseMap();
+            //CreateMap<Staff, UpateStaffRequestVM>().ReverseMap();
+
+
             //  CreateMap<RegisterRequestVM, Patient>().ReverseMap();
 
             CreateMap<RegisterRequestVM, RegisterRequest>().ReverseMap();

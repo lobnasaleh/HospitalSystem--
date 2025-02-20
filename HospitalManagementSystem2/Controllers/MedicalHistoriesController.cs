@@ -35,7 +35,14 @@ namespace HMS.web.Controllers
 
             return View(medicalhistorieswrittenbydoc);
         }
-
+        [HttpGet]
+        public async Task<IActionResult> GetMedicalHistoriesOfPatient()//a3melha endpoint
+        {
+         //  string loggedinuser = User.FindFirstValue(ClaimTypes.NameIdentifier);
+         var res= await unitOfWork.MedicalHistoriesRepository.getAllAsync(m => m.Appointment.Patient.Id == "7E596CCF-CCA2-480C-B830-BBB6513D7309", new[] { "Appointment.Patient" });
+        
+         return View("PatientHistory",res);
+        }
 
 
         [HttpGet]
