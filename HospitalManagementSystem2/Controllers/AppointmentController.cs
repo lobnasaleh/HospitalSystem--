@@ -46,13 +46,18 @@ namespace HMS.web.Controllers
         //doctor available appointments
         public async Task<IActionResult> getAvaialbleAppointmentsOfDoctor(int DepartmentId,string StaffId)//to show it for patient
         {
+            var currentDate = DateTime.Now.Date; // If ss.Date is DateTime
+            var currentTime = TimeOnly.FromDateTime(DateTime.Now);
+
             ViewBag.StaffId = StaffId;
             ViewBag.DepartmentId = DepartmentId;
 
             var appointments = await unitOfWork.AppointmentRepository
-               .getAllAsync(a => a.Status!=AppointmentStatus.CANCELLED && a.AppointmentDateTime> DateTime.Now && a.StaffId == StaffId, new[] { "Department" });
+               .getAllAsync(a => a.Status!=AppointmentStatus.CANCELLED && a.StaffId == StaffId, new[] { "Department" });
 
-            var staffSchedules = await unitOfWork.StaffScheduleRepository.getAllAsync(ss => !ss.IsDeleted &&!ss.Schedule.IsDeleted && !ss.Staff.IsDeleted && ss.StaffId == StaffId, new[] { "Schedule","Staff" });
+            var staffSchedules = await unitOfWork.StaffScheduleRepository.getAllAsync(ss => !ss.IsDeleted &&!ss.Schedule.IsDeleted && !ss.Staff.IsDeleted && ss.StaffId == StaffId
+             && (ss.Schedule.Date > currentDate || (ss.Schedule.Date == currentDate && ss.Schedule.AvailableFrom > currentTime))//el hagat ely ye2dar ye3mlha deassign lazem tkoon 
+            , new[] { "Schedule","Staff" });
 
             if (!staffSchedules.Any()) {
                 TempData["Error"] = "No Available Appointments";

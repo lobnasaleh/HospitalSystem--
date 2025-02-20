@@ -131,26 +131,35 @@ namespace HMS.web.Controllers
             
             //can not deassign a schedule that is already an appointment
              var asp=   await unitOfWork.AppointmentRepository.
-                getAllAsync(a => a.Status==AppointmentStatus.CANCELLED && a.StaffId == StaffId);
+                getAllAsync(a => a.Status==AppointmentStatus.UPCOMING && a.StaffId == StaffId);
 
             var sched = await unitOfWork.ScheduleRepository.getAllAsync(s => s.Id == ScheduleId && !s.IsDeleted
           );
-
-            if (!sched.Any()||! asp.Any()) {
-                return NotFound();
-            
+            if (!asp.Any())
+            {
+                //does not have an appointment
+                ss.IsDeleted = true;
+                unitOfWork.StaffScheduleRepository.Update(ss);
+                await unitOfWork.completeAsync();
+                return RedirectToAction("getAssignedStaff");
             }
 
-            bool hasConflict = asp.Any(app => sched.Any(s => app.Status==AppointmentStatus.UPCOMING && app.AppointmentDateTime.TimeOfDay == s.AvailableFrom.ToTimeSpan()));
 
-            if (hasConflict) {
-                TempData["Error"] = "Can not Deassign a Schedule that is an Appointment";
+            bool hasConflict = asp.Any(app => sched.Any(s =>
+      app.AppointmentDateTime.Date == s.Date &&  
+      TimeOnly.FromDateTime(app.AppointmentDateTime) >= s.AvailableFrom &&  
+      TimeOnly.FromDateTime(app.AppointmentDateTime) <= s.AvailableTo 
+  ));
+
+            if (hasConflict)
+            {
+                TempData["Error"] = "Cannot Deassign a Schedule that has an Upcoming Appointment";
                 return RedirectToAction("getAssignedStaff");
             }
 
             ss.IsDeleted = true;
-          unitOfWork.StaffScheduleRepository.Update(ss);
-          await unitOfWork.completeAsync();
+           unitOfWork.StaffScheduleRepository.Update(ss);
+           await unitOfWork.completeAsync();
             return RedirectToAction("getAssignedStaff");
 
 
