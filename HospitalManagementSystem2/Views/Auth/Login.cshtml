@@ -1,0 +1,51 @@
+﻿@model HMS.Entites.ViewModel.LoginRequestVM
+
+<form asp-action="Login" asp-controller="Auth">
+
+
+    <div class="container border-3 p-3 mb-3">
+        <h1 class=" text-white d-flex justify-content-center">Login</h1>
+        <hr />
+        <div class="row">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="col-2">
+                <label asp-for="Email" class="control-label text-white"></label>
+
+            </div>
+            <div class="col-10 pb-3">
+                <input asp-for="Email" class="form-control pt-2 " />
+                <span asp-validation-for="Email" class="text-danger"></span>
+
+            </div>
+
+            <div class="col-2">
+                <label asp-for="Password" class="control-label text-white"></label>
+
+            </div>
+            <div class="col-10 pb-3">
+                <input asp-for="Password" class="form-control pt-2 " />
+                <span asp-validation-for="Password" class="text-danger"></span>
+
+            </div>
+
+            <div class="col-5 offset-4">
+                <input type="submit" value="Login" class="btn btn-success w-100" />
+            </div>
+            
+        </div>
+
+
+    </div>
+
+
+
+
+
+</form>
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

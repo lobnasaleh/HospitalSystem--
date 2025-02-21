@@ -7,6 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="Views\Shared\_LayoutAuth.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Views\Shared\_LayoutAuth.cshtml" />
     <None Include="wwwroot\assets\fonts\.DS_Store" />
     <None Include="wwwroot\assets\fonts\flaticon\.DS_Store" />
     <None Include="wwwroot\assets\fonts\flaticon\font\.DS_Store" />
@@ -36,6 +41,14 @@
     <ProjectReference Include="..\HMS.DataAccess\HMS.DataAccess.csproj" />
     <ProjectReference Include="..\HMS.Entites\HMS.Entites.csproj" />
     <ProjectReference Include="..\HMS.Utilities\HMS.Utilities.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Views\Shared\_LayoutAuth.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Views\Shared\_LayoutAuth.cshtml" />
   </ItemGroup>
 
 </Project>

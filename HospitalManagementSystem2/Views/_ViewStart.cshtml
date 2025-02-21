@@ -1,3 +1,14 @@
 ﻿@{
     Layout = "_Layout";
 }
+
+@* @{
+    if (User.Identity.IsAuthenticated)
+    {
+        Layout = "~/Views/Shared/_Layout.cshtml"; // Normal layout for logged-in users
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_LayoutAuth.cshtml"; // Auth layout for guests (not logged in)
+    }
+} *@

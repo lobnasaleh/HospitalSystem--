@@ -51,7 +51,33 @@ namespace HMS.web.Controllers
             }
             return View(roleVM);
         }
+        [HttpGet]
+        public async Task<IActionResult> login()
+        {
+            return View();
+        }
 
+            [HttpPost]
+        public async Task<IActionResult> Login(LoginRequestVM loginRequestvm)
+        {
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            //map loginrequestdto to loginrequest
+            var req = mapper.Map<LoginRequest>(loginRequestvm);
+            var result = await authService.Login(req);
+
+            if (!result.isAuthenticated)
+            {
+                ViewBag.Error = "Invalid Credentials";
+                return View(loginRequestvm);
+            }
+
+            return RedirectToAction("Index","Home");
+
+        }
 
         [HttpGet]
         public IActionResult Register()
@@ -140,6 +166,6 @@ namespace HMS.web.Controllers
 
         //login
 
-        //getpatientmedicalhistories
+        
     }
 }
