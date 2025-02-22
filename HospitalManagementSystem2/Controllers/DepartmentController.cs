@@ -12,7 +12,7 @@ namespace HMS.web.Controllers
 {
     public class DepartmentController : Controller
     {
-       private readonly IUnitOfWork unitOfWork;
+        private readonly IUnitOfWork unitOfWork;
         private readonly IMapper mapper;
 
         public DepartmentController(IUnitOfWork unitOfWork, IMapper mapper)
@@ -27,7 +27,7 @@ namespace HMS.web.Controllers
         public async Task<IActionResult> GetAllDepartments()
         {
 
-            var departments = await unitOfWork.DepartmentRepository.getAllAsync(d=>!d.IsDeleted);
+            var departments = await unitOfWork.DepartmentRepository.getAllAsync(d => !d.IsDeleted);
             return View(departments);
         }
         //Department/Add
@@ -48,13 +48,20 @@ namespace HMS.web.Controllers
             if (ModelState.IsValid)
             {
 
-               Department depp= await unitOfWork.DepartmentRepository.getAsync(d=>d.Name == departmentvm.Name,false);
-                if (depp != null)
+                Department depp = await unitOfWork.DepartmentRepository.getAsync(d => d.Name == departmentvm.Name, false);
+                if (depp != null && depp.IsDeleted)
+                {
+                    depp.IsDeleted=false;
+                    unitOfWork.DepartmentRepository.Update(depp);
+                    await unitOfWork.completeAsync();
+                    return RedirectToAction("GetAllDepartments");
+                }
+               else if (depp != null)
                 {
                     ModelState.AddModelError("Name", "A Department with this name already exists.");
                     return View(departmentvm);
                 }
-
+                
                 Department dept = mapper.Map<Department>(departmentvm);
                 await unitOfWork.DepartmentRepository.AddAsync(dept);
                 await unitOfWork.completeAsync();
@@ -65,15 +72,16 @@ namespace HMS.web.Controllers
         [HttpGet]
         [Authorize]
 
-        public async Task< IActionResult> GetDepartmentById(int id)
+        public async Task<IActionResult> GetDepartmentById(int id)
         {
 
-            var department = await unitOfWork.DepartmentRepository.getAsync(d=>!d.IsDeleted && d.Id==id);
-            if (department == null) { 
-            
-              return NotFound();
+            var department = await unitOfWork.DepartmentRepository.getAsync(d => !d.IsDeleted && d.Id == id);
+            if (department == null)
+            {
+
+                return NotFound();
             }
-            return View("SpecificDepartment",department);
+            return View("SpecificDepartment", department);
         }
         //Department/Update/1
         [HttpGet]
@@ -86,19 +94,19 @@ namespace HMS.web.Controllers
             {
                 return NotFound();
             }
-           var toupdate= mapper.Map<DepartmentViewModel>(department);
-            return View( toupdate);
+            var toupdate = mapper.Map<DepartmentViewModel>(department);
+            return View(toupdate);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
 
-        public async Task<IActionResult> UpdateDepartment(int id,DepartmentViewModel newdeptvm)
+        public async Task<IActionResult> UpdateDepartment(int id, DepartmentViewModel newdeptvm)
         {
             if (ModelState.IsValid)
             {
-               Department d= await unitOfWork.DepartmentRepository.getAsync(d=>d.Id==id);
+                Department d = await unitOfWork.DepartmentRepository.getAsync(d => d.Id == id);
                 if (d is null)
                 {
                     return NotFound();
@@ -135,27 +143,28 @@ namespace HMS.web.Controllers
 
         public async Task<IActionResult> Delete(int id)
         {
-           
-                Department d = await unitOfWork.DepartmentRepository.getAsync(d => d.Id == id);
-                if (d is null)
-                {
-                    return NotFound();
-                }
-                //check if department is not assigned to any appointment or has staff members
 
-              Staff staff=  await unitOfWork.StaffRepository.getAsync(s=>s.DepartmentId==id);
-              Appointment appointment = await unitOfWork.AppointmentRepository.getAsync(a=>a.DepartmentId==id && a.AppointmentDateTime>=DateTime.Today);
-              if (appointment is not null || staff is not null)
-              {
+            Department d = await unitOfWork.DepartmentRepository.getAsync(d => d.Id == id);
+            if (d is null)
+            {
+                return NotFound();
+            }
+            //check if department is not assigned to any appointment or has staff members
+
+            Staff staff = await unitOfWork.StaffRepository.getAsync(s => s.DepartmentId == id);
+            Appointment appointment = await unitOfWork.AppointmentRepository.getAsync(a => a.DepartmentId == id && a.AppointmentDateTime >= DateTime.Today);
+            if (appointment is not null || staff is not null)
+            {
                 TempData["ErrorMessage"] = "Can not delete a Department having upcoming appointments or assigned staff";
-                    return RedirectToAction("GetAllDepartments"); }
-
-                d.IsDeleted = true;
-                unitOfWork.DepartmentRepository.Update(d);
-                await unitOfWork.completeAsync();
                 return RedirectToAction("GetAllDepartments");
+            }
+
+            d.IsDeleted = true;
+            unitOfWork.DepartmentRepository.Update(d);
+            await unitOfWork.completeAsync();
+            return RedirectToAction("GetAllDepartments");
         }
 
- 
+
     }
 }

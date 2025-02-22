@@ -19,6 +19,7 @@ namespace HMS.web.Controllers
         private readonly IMapper mapper;
         private readonly IUnitOfWork unitOfWork;
 
+
         public AppointmentController(IUnitOfWork unitOfWork, IMapper mapper)
         {
             this.unitOfWork = unitOfWork;
@@ -26,28 +27,29 @@ namespace HMS.web.Controllers
         }
 
         //admin
-        [Authorize(Roles ="Admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> AllAppointments()
         {
-           var a= await unitOfWork.AppointmentRepository.getAllAsync(null, new[] { "Department", "Patient" ,"Staff"});
+            var a = await unitOfWork.AppointmentRepository.getAllAsync(null, new[] { "Department", "Patient", "Staff" });
             return View(a);
         }
 
-        public async Task<IActionResult> AppointmentOfDoc() { //to show it for doctor writing histories 
+        public async Task<IActionResult> AppointmentOfDoc()
+        { //to show it for doctor writing histories 
             //get the id of the logged in staff 
             string docid = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        
-          IEnumerable<Appointment> appointments=  await unitOfWork.AppointmentRepository
-                .getAllAsync(a=>a.Status!=AppointmentStatus.CANCELLED && a.StaffId== docid, new[] { "Department", "Patient" } 
-                );//ma ansash a3adelha
 
-         return View("AppointmentOfDoctor",appointments);
+            IEnumerable<Appointment> appointments = await unitOfWork.AppointmentRepository
+                  .getAllAsync(a => a.Status != AppointmentStatus.CANCELLED && a.StaffId == docid, new[] { "Department", "Patient" }
+                  );//ma ansash a3adelha
+
+            return View("AppointmentOfDoctor", appointments);
         }
 
 
         //doctor available appointments
-        [Authorize(Roles ="Patient")]
-        public async Task<IActionResult> getAvaialbleAppointmentsOfDoctor(int DepartmentId,string StaffId)//to show it for patient
+        [Authorize(Roles = "Patient")]
+        public async Task<IActionResult> getAvaialbleAppointmentsOfDoctor(int DepartmentId, string StaffId)//to show it for patient
         {
             ViewBag.PatientId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var currentDate = DateTime.Now.Date; // If ss.Date is DateTime
@@ -57,15 +59,16 @@ namespace HMS.web.Controllers
             ViewBag.DepartmentId = DepartmentId;
 
             var appointments = await unitOfWork.AppointmentRepository
-               .getAllAsync(a => a.Status!=AppointmentStatus.CANCELLED && a.StaffId == StaffId, new[] { "Department" });
+               .getAllAsync(a => a.Status != AppointmentStatus.CANCELLED && a.StaffId == StaffId, new[] { "Department" });
 
-            var staffSchedules = await unitOfWork.StaffScheduleRepository.getAllAsync(ss => !ss.IsDeleted &&!ss.Schedule.IsDeleted && !ss.Staff.IsDeleted && ss.StaffId == StaffId
+            var staffSchedules = await unitOfWork.StaffScheduleRepository.getAllAsync(ss => !ss.IsDeleted && !ss.Schedule.IsDeleted && !ss.Staff.IsDeleted && ss.StaffId == StaffId
              && (ss.Schedule.Date > currentDate || (ss.Schedule.Date == currentDate && ss.Schedule.AvailableFrom > currentTime))//el hagat ely ye2dar ye3mlha deassign lazem tkoon 
-            , new[] { "Schedule","Staff" });
+            , new[] { "Schedule", "Staff" });
 
-            if (!staffSchedules.Any()) {
+            if (!staffSchedules.Any())
+            {
                 TempData["Error"] = "No Available Appointments";
-                return RedirectToAction("Search","Staff");
+                return RedirectToAction("Search", "Staff");
             }
 
             var availableSchedules = staffSchedules
@@ -75,12 +78,12 @@ namespace HMS.web.Controllers
                 TimeOnly.FromDateTime(appointment.AppointmentDateTime) <= ss.Schedule.AvailableTo))
             .Select(ss => ss.Schedule)
             .ToList();
-            
+
 
             return View(availableSchedules);
         }
         //Book Appointment
-        [Authorize(Roles ="Patient")]
+        [Authorize(Roles = "Patient")]
         public async Task<IActionResult> BookAppointment(BookAppointmentVM bookAppointmentVM)//to show it for patient
         {
 
@@ -90,10 +93,10 @@ namespace HMS.web.Controllers
                 return RedirectToAction("getAvaialbleAppointmentsOfDoctor", new { bookAppointmentVM.DepartmentId, bookAppointmentVM.StaffId });
 
             }
-            Appointment ap=  mapper.Map<Appointment>(bookAppointmentVM);
-            ap.Status=AppointmentStatus.UPCOMING;
+            Appointment ap = mapper.Map<Appointment>(bookAppointmentVM);
+            ap.Status = AppointmentStatus.UPCOMING;
             await unitOfWork.AppointmentRepository.AddAsync(ap);
-            if (  await unitOfWork.completeAsync() <= 0)
+            if (await unitOfWork.completeAsync() <= 0)
             {
                 //fail
                 TempData["Error"] = "Could not book your Appointment";
@@ -110,8 +113,8 @@ namespace HMS.web.Controllers
         public async Task<IActionResult> AppointmentsOfPatient()
         {
             //get the id of the logged in patient
-             string patientid = User.FindFirstValue(ClaimTypes.NameIdentifier);
-           
+            string patientid = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
             IEnumerable<Appointment> appointments = await unitOfWork.AppointmentRepository
                   .getAllAsync(a => a.PatientId == patientid, new[] { "Department", "Staff" }
                   );//ma ansash a3adelha
@@ -121,10 +124,10 @@ namespace HMS.web.Controllers
 
         //CANCEL APPOINTMENT
         [HttpGet]
-        [Authorize(Roles ="Patient")]
+        [Authorize(Roles = "Patient")]
         public async Task<IActionResult> ConfirmDelete(int id)//appointmentid
         {
-            var appointment = await unitOfWork.AppointmentRepository.getAsync(a=> a.Id == id);
+            var appointment = await unitOfWork.AppointmentRepository.getAsync(a => a.Id == id);
             if (appointment == null)
             {
                 return NotFound();
@@ -140,7 +143,7 @@ namespace HMS.web.Controllers
         public async Task<IActionResult> Delete(int id)
         {
 
-           Appointment a = await unitOfWork.AppointmentRepository.getAsync(d => d.Id == id);
+            Appointment a = await unitOfWork.AppointmentRepository.getAsync(d => d.Id == id);
             if (a is null)
             {
                 return NotFound();

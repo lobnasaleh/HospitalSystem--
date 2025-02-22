@@ -22,6 +22,7 @@ namespace HMS.web.Controllers
         private readonly IUnitOfWork unitOfWork;
         private readonly IMapper mapper;
 
+
         public MedicalHistoriesController(IUnitOfWork unitOfWork, IMapper mapper)
         {
             this.unitOfWork = unitOfWork;
@@ -33,9 +34,9 @@ namespace HMS.web.Controllers
 
         public async Task<IActionResult> GetWrittenDoctorHistories()
         {
-             string docid = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            string docid = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            var medicalhistorieswrittenbydoc = await unitOfWork.MedicalHistoriesRepository.getAllAsync(md => md.Appointment.StaffId== docid, new[] { "Appointment.Patient" });
+            var medicalhistorieswrittenbydoc = await unitOfWork.MedicalHistoriesRepository.getAllAsync(md => md.Appointment.StaffId == docid, new[] { "Appointment.Patient" });
 
             return View(medicalhistorieswrittenbydoc);
         }
@@ -44,10 +45,10 @@ namespace HMS.web.Controllers
 
         public async Task<IActionResult> GetMedicalHistoriesOfPatient()//a3melha endpoint
         {
-          string loggedinuser = User.FindFirstValue(ClaimTypes.NameIdentifier);
-         var res= await unitOfWork.MedicalHistoriesRepository.getAllAsync(m => m.Appointment.Patient.Id == loggedinuser, new[] { "Appointment.Patient" });
-        
-         return View("PatientHistory",res);
+            string loggedinuser = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var res = await unitOfWork.MedicalHistoriesRepository.getAllAsync(m => m.Appointment.Patient.Id == loggedinuser, new[] { "Appointment.Patient" });
+
+            return View("PatientHistory", res);
         }
 
 
@@ -57,7 +58,8 @@ namespace HMS.web.Controllers
         public async Task<IActionResult> Add(int AppointmentId)
         {
             Appointment AP = await unitOfWork.AppointmentRepository.getAsync(ap => ap.Id == AppointmentId, false, new[] { "Patient" });
-            if (AP == null) {
+            if (AP == null)
+            {
                 return NotFound();
             }
             //map appointment to medicalhistoryvm
@@ -65,11 +67,11 @@ namespace HMS.web.Controllers
             {
                 AppointmentDateTime = AP.AppointmentDateTime,
                 FullName = AP.Patient.FullName,
-                AppointmentId=AppointmentId
+                AppointmentId = AppointmentId
             };
 
 
-    
+
 
             return View(mh);
         }
@@ -97,10 +99,10 @@ namespace HMS.web.Controllers
                 //map to medicalhistory
                 MedicalHistory mapped = new MedicalHistory()
                 {
-                    AppointmentId=medicalhistoryfromreq.AppointmentId,
-                    Diagnosis=medicalhistoryfromreq.Diagnosis,
-                    Prescription=medicalhistoryfromreq.Prescription,
-                    TreatmentPlan= medicalhistoryfromreq.TreatmentPlan
+                    AppointmentId = medicalhistoryfromreq.AppointmentId,
+                    Diagnosis = medicalhistoryfromreq.Diagnosis,
+                    Prescription = medicalhistoryfromreq.Prescription,
+                    TreatmentPlan = medicalhistoryfromreq.TreatmentPlan
                 };
 
 
@@ -118,7 +120,7 @@ namespace HMS.web.Controllers
 
         public async Task<IActionResult> Update(int id)//medicalHistoryId
         {
-            MedicalHistory mh = await unitOfWork.MedicalHistoriesRepository.getAsync(m=>m.Id==id, false, new[] { "Appointment.Patient" });
+            MedicalHistory mh = await unitOfWork.MedicalHistoriesRepository.getAsync(m => m.Id == id, false, new[] { "Appointment.Patient" });
             if (mh == null)
             {
                 return NotFound();
@@ -126,19 +128,19 @@ namespace HMS.web.Controllers
             //map MedicalHistory to medicalhistoryvm
             MedicalHistoryVM med = new MedicalHistoryVM()
             {
-                AppointmentId=mh.AppointmentId,
-                FullName=mh.Appointment.Patient.FullName,
-                AppointmentDateTime=mh.Appointment.AppointmentDateTime,
-                Diagnosis=mh.Diagnosis,
-                Prescription=mh.Prescription,
+                AppointmentId = mh.AppointmentId,
+                FullName = mh.Appointment.Patient.FullName,
+                AppointmentDateTime = mh.Appointment.AppointmentDateTime,
+                Diagnosis = mh.Diagnosis,
+                Prescription = mh.Prescription,
                 TreatmentPlan = mh.TreatmentPlan
             };
             return View(med);
         }
 
-         [HttpPost]
-         [ValidateAntiForgeryToken]
-         [Authorize(Roles ="Staff")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Staff")]
 
         public async Task<IActionResult> Update(MedicalHistoryVM medicalhistoryfromreq)
         {
@@ -166,7 +168,7 @@ namespace HMS.web.Controllers
 
             return View(medicalhistoryfromreq);//3yza ata2ked mazboota wala eh
         }
-       
+
 
     }
 

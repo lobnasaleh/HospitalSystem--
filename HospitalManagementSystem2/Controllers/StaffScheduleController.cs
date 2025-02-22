@@ -12,7 +12,6 @@ using Microsoft.AspNetCore.Mvc;
 namespace HMS.web.Controllers
 {
     public class StaffScheduleController : Controller
-
     {
         private readonly IUnitOfWork unitOfWork;
         private readonly IMapper mapper;

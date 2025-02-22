@@ -113,7 +113,7 @@ namespace HMS.web.Controllers
         public async Task<IActionResult> Update()
         {
             //getting the logged in user 
-             string loggedinuser = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            string loggedinuser = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             Patient p = await unitOfWork.patientRepository.getAsync(s => !s.IsDeleted && s.Id == loggedinuser, false);
             if (p == null)
@@ -175,10 +175,11 @@ namespace HMS.web.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> LogOut() { 
-        
+        public async Task<IActionResult> LogOut()
+        {
+
             await authService.Logout();
-           
+
             return RedirectToAction("Index", "Home");
         }
 

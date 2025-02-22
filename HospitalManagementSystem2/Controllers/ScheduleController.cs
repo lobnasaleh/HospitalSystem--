@@ -13,6 +13,8 @@ namespace HMS.web.Controllers
     public class ScheduleController : Controller
     {
 
+
+
         private readonly IUnitOfWork unitOfWork;
         private readonly IMapper mapper;
         public ScheduleController(IUnitOfWork unitOfWork, IMapper mapper)
@@ -25,7 +27,7 @@ namespace HMS.web.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var s = await unitOfWork.ScheduleRepository.getAllAsync(s=>!s.IsDeleted);
+            var s = await unitOfWork.ScheduleRepository.getAllAsync(s => !s.IsDeleted);
             return View(s);
         }
 
@@ -149,12 +151,12 @@ namespace HMS.web.Controllers
 
         public async Task<IActionResult> ConfirmDelete(int id)
         {
-            var schedule=await unitOfWork.ScheduleRepository.getAsync(ss=>ss.Id == id);
+            var schedule = await unitOfWork.ScheduleRepository.getAsync(ss => ss.Id == id);
             if (schedule == null)
             {
                 return NotFound();
             }
-                return View("Delete", schedule);
+            return View("Delete", schedule);
 
         }
 
@@ -163,15 +165,16 @@ namespace HMS.web.Controllers
         [Authorize(Roles = "Admin")]
 
         public async Task<IActionResult> Delete(int id)
-        { 
-        Schedule schd=await unitOfWork.ScheduleRepository.getAsync(s=>!s.IsDeleted && s.Id == id);
+        {
+            Schedule schd = await unitOfWork.ScheduleRepository.getAsync(s => !s.IsDeleted && s.Id == id);
             if (schd is null)
             {
                 return NotFound();
             }
             //is this schedule assigned to a staff 
-        StaffSchedule stsc= await unitOfWork.StaffScheduleRepository.getAsync(ss=>ss.ScheduleId == id);
-            if (stsc != null) {
+            StaffSchedule stsc = await unitOfWork.StaffScheduleRepository.getAsync(ss => ss.ScheduleId == id);
+            if (stsc != null)
+            {
 
                 TempData["ErrorMessage"] = "can not delete this schedule as it is already assigned to a staff member.";
                 return RedirectToAction("Index");
@@ -184,7 +187,7 @@ namespace HMS.web.Controllers
             TempData["ErrorMessage"] = "Schedule deleted Successfully";
 
             return RedirectToAction("Index");
-        
+
         }
 
 
