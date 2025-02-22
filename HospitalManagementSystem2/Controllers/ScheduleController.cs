@@ -6,6 +6,7 @@ using HMS.Entities.Models;
 using HMS.Entites.Interfaces;
 using AutoMapper;
 using HMS.Entites.ViewModel;
+using Microsoft.AspNetCore.Authorization;
 
 namespace HMS.web.Controllers
 {
@@ -20,6 +21,8 @@ namespace HMS.web.Controllers
             this.mapper = mapper;
         }
         [HttpGet]
+        [Authorize(Roles = "Admin")]
+
         public async Task<IActionResult> Index()
         {
             var s = await unitOfWork.ScheduleRepository.getAllAsync(s=>!s.IsDeleted);
@@ -27,6 +30,8 @@ namespace HMS.web.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin")]
+
         public async Task<IActionResult> Create()
         {
             return View();
@@ -35,6 +40,8 @@ namespace HMS.web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
+
         public async Task<IActionResult> Create(ScheduleVM scheduleVM)
         {
             if (!ModelState.IsValid)
@@ -72,6 +79,8 @@ namespace HMS.web.Controllers
             return RedirectToAction("Index");
         }
         [HttpGet]
+        [Authorize(Roles = "Admin")]
+
         public async Task<IActionResult> Update(int id)
         {
 
@@ -88,6 +97,8 @@ namespace HMS.web.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
+
         public async Task<IActionResult> Update(int id, ScheduleVM scheduleVM)
         {
             if (ModelState.IsValid)
@@ -134,6 +145,8 @@ namespace HMS.web.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin")]
+
         public async Task<IActionResult> ConfirmDelete(int id)
         {
             var schedule=await unitOfWork.ScheduleRepository.getAsync(ss=>ss.Id == id);
@@ -147,6 +160,8 @@ namespace HMS.web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
+
         public async Task<IActionResult> Delete(int id)
         { 
         Schedule schd=await unitOfWork.ScheduleRepository.getAsync(s=>!s.IsDeleted && s.Id == id);

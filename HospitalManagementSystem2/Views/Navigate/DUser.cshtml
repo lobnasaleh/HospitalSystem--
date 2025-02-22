@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Management Dashboard</title>
+    <title>Doctor Management Dashboard</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -44,24 +44,18 @@
         }
 
         .manage-staff {
-            background-color: #2196F3; 
+            background-color: #2196F3; /* Blue */
             color: white;
         }
 
         .manage-schedule {
-            background-color: #f44336; 
+            background-color: #f44336; /* Red */
             color: white;
         }
 
         .manage-staff-schedule {
-            background-color: #FFC107;
+            background-color: #FFC107; /* Yellow */
             color: white;
-        }
-
-        .manage-department {
-            background-color: brown;
-            color: white;
-
         }
 
         .button:hover {
@@ -72,12 +66,10 @@
 <body>
 
     <div class="container">
-        <h1>Admin Management Dashboard</h1>
-        <a class="button manage-department" href="/Department/GetAllDepartments">Manage Department</a>
-        <a class="button manage-patients" href="/Patient/GetAllPatients">Manage Patients</a>
-        <a class="button manage-staff" href="/Staff/Index">Manage Staff</a>
-        <a class="button manage-schedule" href="/Schedule/Index">Manage Schedule</a>
-        <a class="button manage-staff-schedule" href="/StaffSchedule/Assign">Manage Staff Schedule</a>
+        <h1>Doctor Management Dashboard</h1>
+        <a class="button manage-staff-schedule" href="/Appointment/AppointmentOfDoc">View Appointments And Add Medical History or Update Medical Histories </a>
+        <a class="button manage-schedule" href="/MedicalHistories/GetWrittenDoctorHistories">View Written Medical Histories</a>
+     @*    <a class="button manage-schedule" href="/MedicalHistories/Update?id=">Update Medical History</a> el mafrood el medical history id bytbe3et*@
     </div>
 
 </body>

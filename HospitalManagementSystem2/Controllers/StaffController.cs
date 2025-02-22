@@ -5,6 +5,7 @@ using HMS.Entites.Enums;
 using HMS.Entites.Interfaces;
 using HMS.Entites.ViewModel;
 using HMS.Entities.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -26,6 +27,8 @@ namespace HMS.web.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin")]
+
         public async Task<IActionResult> Index()
         {
             var st = await _unitOfWork.StaffRepository.getAllAsync(s => !s.IsDeleted, new[] {"Department"} );
@@ -33,6 +36,8 @@ namespace HMS.web.Controllers
 
         }
         [HttpGet]
+        [Authorize(Roles = "Admin")]
+
         public async Task<IActionResult> Create()
         {
             var depts=await _unitOfWork.DepartmentRepository.getAllAsync(d=>!d.IsDeleted);
@@ -54,6 +59,8 @@ namespace HMS.web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
+
         //admin only
         public async Task<IActionResult> Create(RegisterStaffRequestVM staffFromReq)
         {
@@ -70,7 +77,25 @@ namespace HMS.web.Controllers
                 }
                 
                 var st = mapper.Map<RegisterStaffRequest>(staffFromReq);
-                await _authService.RegisterStaff(st);//need to handle the token
+              var res=  await _authService.RegisterStaff(st);//need to handle the token
+
+                if (!res.isAuthenticated)
+                {
+                    var depts2 = await _unitOfWork.DepartmentRepository.getAllAsync(d => !d.IsDeleted);
+                    var departmentList2 = depts2.Select(d => new SelectListItem
+                    {
+                        Value = d.Id.ToString(),
+                        Text = d.Name
+                    });
+                    ViewBag.Departments = departmentList2;
+                    var positions2 = Enum.GetValues(typeof(Position))
+                                       .Cast<Position>()
+                                       .Select(e => new SelectListItem { Value = ((int)e).ToString(), Text = e.ToString() });
+
+                    ViewBag.Positions = positions2;
+                    ModelState.AddModelError("",res.Message);
+                    return View(staffFromReq);
+                }
                
                 return RedirectToAction("Index");
             }
@@ -91,6 +116,8 @@ namespace HMS.web.Controllers
             return View(staffFromReq);
         }
         [HttpGet]
+        [Authorize(Roles = "Admin")]
+
         public async Task<IActionResult> Update(string id)
         {
             //getting the logged in user 
@@ -132,6 +159,7 @@ namespace HMS.web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
 
         //admin or staff
         public async Task<IActionResult> Update(string id,UpateStaffRequestVM staffFromReq)//el id da kan fel get howa ehtafz beeh bdoon hiddenfield 
@@ -178,6 +206,8 @@ namespace HMS.web.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin")]
+
         public async Task<IActionResult> ConfirmDelete(string id)
         {
             var staff = await _unitOfWork.StaffRepository.getAsync(ss => ss.Id == id);
@@ -191,6 +221,8 @@ namespace HMS.web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
+
         public async Task<IActionResult> Delete(string id)
         {
             Staff s = await _unitOfWork.StaffRepository.getAsync(s => s.Id == id);
@@ -229,7 +261,8 @@ namespace HMS.web.Controllers
             return View();
         }
 
-        
+        [Authorize(Roles = "Patient")]
+
         public async Task<IActionResult>SearchStaff(string searchQuery)
         {
 

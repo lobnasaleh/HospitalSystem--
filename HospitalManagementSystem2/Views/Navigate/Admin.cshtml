@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Doctor Management Dashboard</title>
+    <title>Admin Management Dashboard</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -38,26 +38,36 @@
             transition: background-color 0.3s ease;
         }
 
-        .manage-patients {
+        .manage-roles {
             background-color: #4CAF50; /* Green */
             color: white;
         }
 
         .manage-staff {
-            background-color: #2196F3; /* Blue */
+            background-color: #2196F3; 
             color: white;
         }
 
         .manage-schedule {
-            background-color: #f44336; /* Red */
+            background-color: #f44336; 
             color: white;
         }
 
         .manage-staff-schedule {
-            background-color: #FFC107; /* Yellow */
+            background-color: #FFC107;
             color: white;
         }
 
+        .manage-department {
+            background-color: brown;
+            color: white;
+
+        }
+
+        .manage-appointment {
+            background-color:forestgreen;
+            color: white;
+        }
         .button:hover {
             opacity: 0.8;
         }
@@ -66,10 +76,13 @@
 <body>
 
     <div class="container">
-        <h1>Doctor Management Dashboard</h1>
-        <a class="button manage-staff-schedule" href="/Appointment/AppointmentOfDoc">View Appointments And Add Medical History</a>
-        <a class="button manage-staff-schedule" href="/MedicalHistories/GetWrittenDoctorHistories">View Written Medical Histories</a>
-     @*    <a class="button manage-schedule" href="/MedicalHistories/Update?id=">Update Medical History</a> el mafrood el medical history id bytbe3et*@
+        <h1>Admin Management Dashboard</h1>
+        <a class="button manage-department" href="/Department/GetAllDepartments">Manage Department</a>
+        <a class="button manage-roles" href="/Auth/AddRole">Manage Roles</a>
+        <a class="button manage-roles manage-appointment" href="/Appointment/AllAppointments">Manage Appointments</a>
+        <a class="button manage-staff" href="/Staff/Index">Manage Staff</a>
+        <a class="button manage-schedule" href="/Schedule/Index">Manage Schedule</a>
+        <a class="button manage-staff-schedule" href="/StaffSchedule/Assign">Manage Staff Schedule</a>
     </div>
 
 </body>

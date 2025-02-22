@@ -8,6 +8,7 @@ using HMS.Entites.Models;
 using HMS.Entities.Interfaces;
 using HMS.Utilities.BackgroundServices;
 using HMS.web.Helpers;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
@@ -25,29 +26,31 @@ namespace HMS.web
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
-
+           
             builder.Services.AddDbContext<HospitalContext>(options =>
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("cs"),
                 b => b.MigrationsAssembly(typeof(HospitalContext).Assembly.FullName)
                     );//ba2olo ye3ml el migrations folder fel DataAccess l2eno met3wed ye3mlha 3nd el startup project 
             });
+            builder.Services.AddAuthentication();
+
             builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
-            .AddEntityFrameworkStores<HospitalContext>();
-            //.AddDefaultTokenProviders();
+            .AddEntityFrameworkStores<HospitalContext>()
+            .AddDefaultTokenProviders();
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
             builder.Services.AddHostedService<AppointmentStatusUpdater>();//for background service
             builder.Services.AddAutoMapper(typeof(MappingProfile));//auto mapper
 
-/*            // Debug AutoMapper configuration
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile<MappingProfile>();
-            });
+            /*            // Debug AutoMapper configuration
+                        var config = new MapperConfiguration(cfg =>
+                        {
+                            cfg.AddProfile<MappingProfile>();
+                        });
 
-            // Validate AutoMapper configuration
-            config.AssertConfigurationIsValid();*/
-
+                        // Validate AutoMapper configuration
+                        config.AssertConfigurationIsValid();*/
+          
             builder.Services.AddScoped<IAuthService,AuthService>();
         
 
@@ -72,7 +75,7 @@ namespace HMS.web
             app.UseStaticFiles();
 
             app.UseRouting();
-          //  app.UseAuthentication();
+            app.UseAuthentication();
 
             app.UseAuthorization();
 

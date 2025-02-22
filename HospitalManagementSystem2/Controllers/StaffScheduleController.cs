@@ -5,6 +5,7 @@ using HMS.Entites.Interfaces;
 using HMS.Entites.ViewModel;
 using HMS.Entities.Interfaces;
 using HMS.Entities.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 
@@ -22,6 +23,8 @@ namespace HMS.web.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin")]
+
         public async Task<IActionResult> getAssignedStaff()
         {
             var currentDate = DateTime.Now.Date; // If ss.Date is DateTime
@@ -37,6 +40,8 @@ namespace HMS.web.Controllers
 
 
         [HttpGet]
+        [Authorize(Roles = "Admin")]
+
         public async Task< IActionResult> Assign()
         {
             
@@ -56,6 +61,8 @@ namespace HMS.web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
+
         public async Task<IActionResult> Assign(AssignVM assignVM)
         {
             if (!ModelState.IsValid) {
@@ -104,6 +111,8 @@ namespace HMS.web.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin")]
+
         public async Task<IActionResult> ConfirmDeAssign(int ScheduleId ,string StaffId)
         {
             var s = await unitOfWork.StaffScheduleRepository.getAsync(ss =>!ss.IsDeleted && ss.ScheduleId == ScheduleId && ss.StaffId == StaffId);
@@ -118,6 +127,8 @@ namespace HMS.web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
+
         public async Task<IActionResult> DeAssign(string StaffId, int ScheduleId)
         {
         StaffSchedule ss = await unitOfWork.StaffScheduleRepository.getAsync(s => !s.IsDeleted && s.StaffId == StaffId && s.ScheduleId == ScheduleId 

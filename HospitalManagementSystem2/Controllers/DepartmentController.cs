@@ -5,6 +5,7 @@ using HMS.Entites.Interfaces;
 using HMS.Entites.ViewModel;
 using HMS.Entities.Interfaces;
 using HMS.Entities.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HMS.web.Controllers
@@ -22,6 +23,7 @@ namespace HMS.web.Controllers
 
         //Department/GetAllDepartments
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> GetAllDepartments()
         {
 
@@ -30,12 +32,16 @@ namespace HMS.web.Controllers
         }
         //Department/Add
         [HttpGet]
+        [Authorize(Roles = "Admin")]
+
         public IActionResult Add()
         {
             return View();
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
+
         public async Task<IActionResult> Add(DepartmentViewModel departmentvm)
         {
 
@@ -57,6 +63,8 @@ namespace HMS.web.Controllers
             return View();
         }
         [HttpGet]
+        [Authorize]
+
         public async Task< IActionResult> GetDepartmentById(int id)
         {
 
@@ -69,6 +77,8 @@ namespace HMS.web.Controllers
         }
         //Department/Update/1
         [HttpGet]
+        [Authorize(Roles = "Admin")]
+
         public async Task<IActionResult> UpdateDepartment(int id)
         {
             var department = await unitOfWork.DepartmentRepository.getAsync(d => d.Id == id);
@@ -82,6 +92,8 @@ namespace HMS.web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
+
         public async Task<IActionResult> UpdateDepartment(int id,DepartmentViewModel newdeptvm)
         {
             if (ModelState.IsValid)
@@ -103,6 +115,8 @@ namespace HMS.web.Controllers
 
 
         [HttpGet]
+        [Authorize(Roles = "Admin")]
+
         public async Task<IActionResult> ConfirmDelete(int id)
         {
             var department = await unitOfWork.DepartmentRepository.getAsync(ss => ss.Id == id);
@@ -117,6 +131,8 @@ namespace HMS.web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
+
         public async Task<IActionResult> Delete(int id)
         {
            

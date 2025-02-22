@@ -43,7 +43,9 @@
                         var mergedDateTime = new DateTime(datePart.Year, datePart.Month, datePart.Day, availableFrom.Hour, availableFrom.Minute, availableFrom.Second); // Combine date and time
                     }
                     <td>
-                        <a asp-controller="Appointment" asp-action="BookAppointment" class="btn btn-outline-primary" asp-route-StaffId="@ViewBag.StaffId" asp-route-DepartmentId="@ViewBag.DepartmentId" asp-route-PatientId="7E596CCF-CCA2-480C-B830-BBB6513D7309" asp-route-AppointmentDateTime="@mergedDateTime.ToString("yyyy-MM-ddTHH:mm:ss")">
+                   
+                        <a asp-controller="Appointment" asp-action="BookAppointment" class="btn btn-outline-primary" asp-route-StaffId="@ViewBag.StaffId" asp-route-DepartmentId="@ViewBag.DepartmentId"
+                           asp-route-PatientId="@ViewBag.PatientId" asp-route-AppointmentDateTime="@mergedDateTime.ToString("yyyy-MM-ddTHH:mm:ss")">
                             Book Appointment <i class="bi bi-window-plus"></i>
 
                 </a>

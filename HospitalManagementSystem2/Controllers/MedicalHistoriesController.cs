@@ -12,6 +12,8 @@ using HMS.Entites.Interfaces;
 using AutoMapper;
 using HMS.Entites.ViewModel;
 using Microsoft.CodeAnalysis;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 namespace HMS.web.Controllers
 {
@@ -27,25 +29,31 @@ namespace HMS.web.Controllers
         }
 
         [HttpGet] //getting medical history of this dr
+        [Authorize(Roles = "Staff")]
+
         public async Task<IActionResult> GetWrittenDoctorHistories()
         {
-            // string docid = User.FindFirstValue(ClaimTypes.NameIdentifier); ma ansash azabtha
+             string docid = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            var medicalhistorieswrittenbydoc = await unitOfWork.MedicalHistoriesRepository.getAllAsync(md => md.Appointment.StaffId == "1a2b3c4d-1234-5678-90ab-cdef12345678", new[] { "Appointment.Patient" });
+            var medicalhistorieswrittenbydoc = await unitOfWork.MedicalHistoriesRepository.getAllAsync(md => md.Appointment.StaffId== docid, new[] { "Appointment.Patient" });
 
             return View(medicalhistorieswrittenbydoc);
         }
         [HttpGet]
+        [Authorize(Roles = "Patient")]
+
         public async Task<IActionResult> GetMedicalHistoriesOfPatient()//a3melha endpoint
         {
-         //  string loggedinuser = User.FindFirstValue(ClaimTypes.NameIdentifier);
-         var res= await unitOfWork.MedicalHistoriesRepository.getAllAsync(m => m.Appointment.Patient.Id == "7E596CCF-CCA2-480C-B830-BBB6513D7309", new[] { "Appointment.Patient" });
+          string loggedinuser = User.FindFirstValue(ClaimTypes.NameIdentifier);
+         var res= await unitOfWork.MedicalHistoriesRepository.getAllAsync(m => m.Appointment.Patient.Id == loggedinuser, new[] { "Appointment.Patient" });
         
          return View("PatientHistory",res);
         }
 
 
         [HttpGet]
+        [Authorize(Roles = "Staff")]
+
         public async Task<IActionResult> Add(int AppointmentId)
         {
             Appointment AP = await unitOfWork.AppointmentRepository.getAsync(ap => ap.Id == AppointmentId, false, new[] { "Patient" });
@@ -68,6 +76,8 @@ namespace HMS.web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Staff")]
+
 
         public async Task<IActionResult> Add(MedicalHistoryVM medicalhistoryfromreq)
         {
@@ -104,6 +114,8 @@ namespace HMS.web.Controllers
             return View(medicalhistoryfromreq);//3yza ata2ked mazboota wala eh
         }
         [HttpGet]
+        [Authorize(Roles = "Staff")]
+
         public async Task<IActionResult> Update(int id)//medicalHistoryId
         {
             MedicalHistory mh = await unitOfWork.MedicalHistoriesRepository.getAsync(m=>m.Id==id, false, new[] { "Appointment.Patient" });
@@ -125,7 +137,8 @@ namespace HMS.web.Controllers
         }
 
          [HttpPost]
-         [ValidateAntiForgeryToken] 
+         [ValidateAntiForgeryToken]
+         [Authorize(Roles ="Staff")]
 
         public async Task<IActionResult> Update(MedicalHistoryVM medicalhistoryfromreq)
         {
@@ -153,7 +166,7 @@ namespace HMS.web.Controllers
 
             return View(medicalhistoryfromreq);//3yza ata2ked mazboota wala eh
         }
-        //getMedicalHistoroesByPatient
+       
 
     }
 

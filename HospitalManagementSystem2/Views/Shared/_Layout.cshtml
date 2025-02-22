@@ -68,49 +68,82 @@
                             <li class="nav-item active">
                                 <a class="nav-link" href="@Url.Action("Index", "Home")#home">Home <span class="sr-only">(current)</span></a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="@Url.Action("Index", "Home")#about"> About</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="@Url.Action("Index", "Home")#departments">Departments</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="@Url.Action("Search", "Staff")">Book your Appointment Now!</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="@Url.Action("Register", "Auth")">Register</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="@Url.Action("Login", "Auth")">Login</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="@Url.Action("GetRoles", "Auth")">getRoles</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="@Url.Action("Update", "Auth")">Update your Profile</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#contact">Contact Us</a>
-                            </li>
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    Hi,
-                                </a>
-                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="/Admin/Admin">Admin</a>
-                                    <a class="dropdown-item" href="/DUser/DUser">Doctor</a>
-                                    <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item" href="/PUser/PUser">Patient</a>
-                                </div>
-                            </li>
 
+                            @if (User.Identity.IsAuthenticated == false)
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link" href="@Url.Action("Index", "Home")#departments">Departments</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="@Url.Action("Register", "Auth")">Register</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="@Url.Action("Login", "Auth")">Login</a>
+                                </li>
+                            }
+                            else
+                            {
+                              @*   @foreach (var claim in User.Claims)
+                                {
+                                    Console.WriteLine($"Claim Type: {claim.Type}, Value: {claim.Value}");
+                                }
+ *@
+                               
+                                @if (User.IsInRole("Staff"))
+                                {
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="@Url.Action("Index", "Home")#about"> About</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="#contact">Contact Us</a>
+                                    </li>
+                                    <li class="nav-item">
+                                    <a class="dropdown-item" href="/Navigate/DUser">Manage Patients and Appointments</a>
+                                    </li>
+                                }
+                                else if (User.IsInRole("Patient"))
+                                {
 
+                                    
+                                    
+                                    <li class="nav-item">
+                                        <a class="nav-link btn1" href="@Url.Action("Search", "Staff")">Book Now!</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="@Url.Action("AppointmentsOfPatient", "Appointment")"> your Appointments</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="@Url.Action("GetMedicalHistoriesOfPatient", "MedicalHistories")"> your Medical Histories</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="@Url.Action("Update", "Auth")">Update your Profile</a>
+                                    </li>
+                                   
 
-                            <form class="form-inline">
-                                <button class="btn  my-2 my-sm-0 nav_search-btn" type="submit">
-                                    <i class="fa fa-search" aria-hidden="true"></i>
-                                </button>
-                            </form>
+                                }
+                                else if (User.IsInRole("Admin"))
+                                {//admin
+                                   <li class="nav-item">
+                                    <a class="dropdown-item" href="/Navigate/Admin">Manage System</a>
+                                    </li>
+                                }
+                                else
+                                {
+                                    <li class="nav-item">
+                                        Hello
+                                    </li>
+                                }
+
+                                <li class="nav-item">
+                                    <form asp-action="LogOut" asp-controller="Auth">
+                                        <button type="submit" >LogOut</button>
+                                    </form>
+                                  
+                                </li>
+
+                            }
+
+                           
                         </ul>
                     </div>
                 </nav>

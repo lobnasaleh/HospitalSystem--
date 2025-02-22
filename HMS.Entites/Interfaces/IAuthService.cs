@@ -24,7 +24,7 @@ namespace HMS.Entites.Interfaces
         public Task<AuthResponse> UpdateProfile(string id, UpdateRequest UpdateRequest);
 
         Task<AuthResponse> Login(LoginRequest loginRequest);
-        // Task<AuthResponse> Logout();
+        Task<AuthResponse> Logout();
         Task<ApplicationUser> getUserById(string userId);
     }
 }

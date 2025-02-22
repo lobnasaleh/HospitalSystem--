@@ -4,6 +4,9 @@ using HMS.Entites.Interfaces;
 using HMS.Entites.Models;
 using HMS.Entites.ViewModel;
 using HMS.Entities.Models;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -12,9 +15,11 @@ using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+
 
 namespace HMS.DataAccess.Services.AuthService
 {
@@ -22,15 +27,18 @@ namespace HMS.DataAccess.Services.AuthService
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> roleManager;
+        private readonly SignInManager<ApplicationUser> signInManager;
+        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IConfiguration _config;
 
 
-        public AuthService(UserManager<ApplicationUser> _userManager, RoleManager<IdentityRole> roleManager, IConfiguration _config)
+        public AuthService(UserManager<ApplicationUser> _userManager, RoleManager<IdentityRole> roleManager, SignInManager<ApplicationUser> signInManager, IConfiguration _config, IHttpContextAccessor httpContextAccessor)
         {
             this._userManager = _userManager;
             this.roleManager = roleManager;
+            this.signInManager = signInManager;
             this._config = _config;
-
+            _httpContextAccessor = httpContextAccessor;
         }
         public async Task<ApplicationUser> getUserById(string userId)
         {
@@ -53,20 +61,35 @@ namespace HMS.DataAccess.Services.AuthService
 
             //get roles of user 
             var userRoles = await _userManager.GetRolesAsync(user);
+            List<Claim> claims = new List<Claim>()
+            {
+                new Claim(ClaimTypes.NameIdentifier, user.Id),
+                new Claim(ClaimTypes.Name, user.UserName),
+                new Claim(ClaimTypes.Email, user.Email)
+            };
 
-            //generate jwt token
-            //ba strore fel token hagat zy el id bta3 el user ,roles,name 3shan keda ba3at el user lel generatejwt
-            JwtSecurityToken jwt = await GenerateJWTTokenAsync(user);
+            foreach (var role in userRoles)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, role));
+               
+            }
 
+            /// Create a claims identity
+            var claimsIdentity = new ClaimsIdentity(claims, IdentityConstants.ApplicationScheme);
+            var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
+
+            // Sign in the user
+          await _httpContextAccessor.HttpContext.SignInAsync(
+              IdentityConstants.ApplicationScheme, 
+             claimsPrincipal
+                  );
             AuthResponse res = new AuthResponse()
             {
-                //kol dool baraga3hom lel front l2eno momkn yehtaghom
-                Token = new JwtSecurityTokenHandler().WriteToken(jwt),
+               
                 isAuthenticated = true,
                 Message = "Logged In Successfully !",
                 Email = loginRequest.Email,
-                Roles = userRoles,//agarb asheel .tolist
-                ExpiresOn = DateTime.Now.AddDays(30),
+                Roles = userRoles,
                 Username = user.UserName
             };
 
@@ -117,21 +140,32 @@ namespace HMS.DataAccess.Services.AuthService
             //assign role
             await _userManager.AddToRoleAsync(patient, "Patient");
 
+            List<Claim> claims = new List<Claim>()
+            {
+                new Claim(ClaimTypes.NameIdentifier, patient.Id),
+                new Claim(ClaimTypes.Name, patient.UserName),
+                new Claim(ClaimTypes.Email, patient.Email)
+            };
 
-            JwtSecurityToken jwt = await GenerateJWTTokenAsync(patient);
+            claims.Add(new Claim(ClaimTypes.Role, "Patient"));
 
-            //create Token
+            // await signInManager.SignInWithClaimsAsync(user, false, claims);
+            // Create a claims identity
+            /// Create a claims identity
+            var claimsIdentity = new ClaimsIdentity(claims, IdentityConstants.ApplicationScheme);
+            var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
 
-
-
+            // Sign in the user
+            await _httpContextAccessor.HttpContext.SignInAsync(
+                IdentityConstants.ApplicationScheme,
+               claimsPrincipal
+                    );
             return new AuthResponse
             {
                 Email = patient.Email,
-                ExpiresOn = DateTime.Now.AddDays(30),
                 isAuthenticated = true,
                 Message = $"Welcome {patient.UserName}",
                 Roles = new List<string> { "Patient" },
-                Token = new JwtSecurityTokenHandler().WriteToken(jwt),
                 Username = patient.UserName
             };
         }
@@ -248,63 +282,15 @@ namespace HMS.DataAccess.Services.AuthService
             //assign role
             await _userManager.AddToRoleAsync(st, "Staff");
 
-
-            JwtSecurityToken jwt = await GenerateJWTTokenAsync(st);
-
-            //create Token
-
-
-
+         
             return new AuthResponse
             {
                 Email = st.Email,
-                ExpiresOn = DateTime.Now.AddDays(30),
                 isAuthenticated = true,
-                Message = $"Welcome {st.UserName}",
                 Roles = new List<string> { "Staff" },
-                Token = new JwtSecurityTokenHandler().WriteToken(jwt),
                 Username = st.UserName
             };
         }
-        public async Task<JwtSecurityToken> GenerateJWTTokenAsync(ApplicationUser user)
-        {
-            var claims = await _userManager.GetClaimsAsync(user);
-
-            var roles = await _userManager.GetRolesAsync(user);
-
-            List<Claim> userclaims = new List<Claim>();//to store Id,name,roles and make jwt unique every time
-
-            foreach (var role in roles)
-            {
-                userclaims.Add(new Claim(ClaimTypes.Role, role));
-            }
-            userclaims.Add(new Claim(ClaimTypes.NameIdentifier, user.Id));
-            userclaims.Add(new Claim(ClaimTypes.Email, user.Email));
-            userclaims.Add(new Claim(ClaimTypes.Name, user.UserName));
-            userclaims.Add(new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()));
-
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["jwt:secretkey"]));
-            var SigningCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-
-            JwtSecurityToken mytoken = new JwtSecurityToken(
-                claims: userclaims,
-                audience: _config["jwt:audience"],
-                issuer: _config["jwt:issuer"],
-                expires: DateTime.Now.AddDays(30),
-                signingCredentials: SigningCredentials
-
-
-                );
-
-
-            foreach (var claim in claims)//for testing
-            {
-                Console.WriteLine($"Claim Type: {claim.Type}, Claim Value: {claim.Value}");
-            }
-
-            return mytoken;
-        }
-
         public async Task<AuthResponse> AddRole(string name)
         {
             IdentityRole role=new IdentityRole();
@@ -320,6 +306,12 @@ namespace HMS.DataAccess.Services.AuthService
         {
               var res= await roleManager.Roles.ToListAsync();
             return res;
+        }
+
+        public async Task<AuthResponse> Logout()
+        {
+          await signInManager.SignOutAsync();
+          return new AuthResponse() { IsSuccess = true };
         }
     }
 }
